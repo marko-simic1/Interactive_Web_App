@@ -1,0 +1,230 @@
+﻿@model RPPP_WebApp.ViewModels.TransakcijaViewModel
+@{
+    ViewBag.Title = "Transakcija";
+}
+
+<h2 class="text-center">Popis transakcija</h2>
+
+<div class="d-flex justify-content-center">
+    <a class="btn btn-primary mt-4" asp-controller="Transakcija" asp-action="FormCreateTransakcija" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-sort="@Model.PagingInfo.Sort" asp-route-ascending="@Model.PagingInfo.Ascending">
+        <i class="bi bi-plus-lg"></i>
+        Nova transakcija
+    </a>
+</div>
+
+<br />
+<br />
+
+<pager page-info="@Model.PagingInfo" page-action="Transakcije" page-title="Unesite željenu stranicu"
+       class="float-end">
+</pager>
+
+
+<table id="transakcijaTable" class="table table-sm table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="text-center">
+                <a asp-route-sort="1" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 1 ? !Model.PagingInfo.Ascending : true)">
+                    ID
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="2" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 2 ? !Model.PagingInfo.Ascending : true)">
+                    Model
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="3" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 3 ? !Model.PagingInfo.Ascending : true)">
+                    Poziv na Br.
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="4" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 4 ? !Model.PagingInfo.Ascending : true)">
+                    Vrsta
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="5" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 5 ? !Model.PagingInfo.Ascending : true)">
+                    Iznos
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="6" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 6 ? !Model.PagingInfo.Ascending : true)">
+                    Datum
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="7" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 7 ? !Model.PagingInfo.Ascending : true)">
+                    Opis
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="8" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 8 ? !Model.PagingInfo.Ascending : true)">
+                    Broj kartice
+                </a>
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var transakcija in Model.transakcije)
+        {
+            <partial name="GetTransakcija" model="transakcija" />
+        }
+    </tbody>
+
+    @*
+    <tbody>
+        @foreach (var transakcija in Model.Transakcije)
+        {
+            <tr>
+                <td class="text-center">
+                    @transakcija.IdTrans
+                </td>
+                <td class="text-center">
+                    @if (transakcija.Model != null && transakcija.Model != "")
+                    {
+                        @transakcija.Model
+                    }
+                    else
+                    {
+                        <text>-</text>
+                    }
+                </td>
+                <td class="text-center">
+                    @if (transakcija.PozivNaBr != null)
+                    {
+                        @transakcija.PozivNaBr
+                    }
+                    else
+                    {
+                        <text>-</text>
+                    }
+                </td>
+                <td class="text-center">
+                    @if(transakcija.IdVrsteNavigation != null) {
+                        @transakcija.IdVrsteNavigation.ImeVrste
+                    }
+                    else
+                    {
+                        <text>-</text>
+                    }
+
+                </td>
+                <td class="text-center">
+                    @transakcija.Iznos
+                </td>
+                <td class="text-center">
+                    @transakcija.Datum
+                </td>
+                <td class="text-center">
+                    @if (transakcija.Opis != null && transakcija.Opis != "")
+                    {
+                        @transakcija.Opis
+                    }
+                    else
+                    {
+                        <text>-</text>
+                    }
+                </td>
+                <td class="text-center">
+                    @transakcija.BrKartice
+                </td>
+                <td>
+                    <a class="btn btn-primary" asp-controller="Transakcija" asp-action="FormUpdateTransakcija" asp-route-redirect="1" asp-route-id="@transakcija.IdTrans" asp-route-CurrentPage="@Model.PagingInfo.CurrentPage" asp-route-Sort="@Model.PagingInfo.Sort" asp-route-Ascending="@Model.PagingInfo.Ascending">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                </td>
+                <td>
+                    <form asp-controller="Transakcija" asp-action="DeleteTransakcija" method="post"
+                      onsubmit="return confirm('Sigurno želiš obrisati transakciju?');">
+                        <input type="hidden" name="id" value="@transakcija.IdTrans" />
+                        <input type="hidden" name="redirect" value="1">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </form>
+                </td>
+
+            </tr>
+        }
+    </tbody>*@
+</table>
+
+<button id="generatePdfButton" class="btn btn-primary">Izvezite PDF</button>
+<button id="generateExcelButton" class="btn btn-success">Izvezite Excel</button>
+
+<h5 class="text-center">Uvoz podataka korištenjem Excela</h5>
+<form method="post" enctype="multipart/form-data" action="@Url.Action("ImportTransakcijaExcel", "Transakcija")">
+    <div class="mb-3">
+        <label for="excelFile" class="form-label">Odaberite Excel datoteku:</label>
+        <input type="file" class="form-control" id="excelFile" name="file" accept=".xlsx">
+    </div>
+    <button type="submit" class="btn btn-primary">Uvezi podatke</button>
+</form>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+    <script>
+        var importStatus = '@(TempData["imported"])';
+        if (importStatus === 'True') {
+            alert("Podaci su uspješno uvezeni.");
+        } else if (importStatus === 'False') {
+            var importError = '@(TempData["importError"])';
+            alert("Greška prilikom uvoza podataka: " + importError);
+        }
+        document.getElementById('generatePdfButton').addEventListener('click', function () {
+            fetch('@Url.Action("TransakcijePDF", "Report")', {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    console.error('Failed to generate PDF');
+                }
+            }).then(blob => {
+                // Create a download link for the PDF
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'transakcije.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        });
+        document.getElementById('generateExcelButton').addEventListener('click', function () {
+            window.location.href = '@Url.Action("TransakcijeExcel", "Report")';
+        });
+    </script>
+}
+
+@if (TempData["used"] != null && (bool)TempData["used"])
+{
+    <script>
+        alert("Kartica se koristi");
+    </script>
+}
+@if (TempData["deleted"] != null && (bool)TempData["deleted"])
+{
+    <script>
+        alert("Kartica je obrisana");
+    </script>
+}
+@if (TempData["updated"] != null && (bool)TempData["updated"])
+{
+    <script>
+        alert("Kartica je ažurirana");
+    </script>
+}
+@if (TempData["created"] != null && (bool)TempData["created"])
+{
+    <script>
+        alert("Kartica je stvorena");
+    </script>
+}

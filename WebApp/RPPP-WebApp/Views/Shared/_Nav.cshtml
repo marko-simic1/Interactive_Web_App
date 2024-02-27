@@ -1,0 +1,87 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" asp-action="Index" asp-controller="Home">RPPP Homework - Group 02</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="Index" asp-controller="Home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="Index" asp-controller="ViewLog">View Log</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Niko Cakic
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" asp-controller="Posao" asp-action="Index">Posao (STP) </a></li>
+                        <li><a class="dropdown-item" asp-controller="VrstaPosla" asp-action="Index">Vrsta posla</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" asp-controller="Osobaa" asp-action="Index">Osoba (JTP) </a></li>
+                        <li><a class="dropdown-item" asp-controller="Projektt" asp-action="Index">Projekt</a></li>
+                    </ul>
+
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Kristijan Hasnek
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" asp-controller="Zahtjev" asp-action="Zahtjevi">Zahtjevi (STP) </a></li>
+                        <li><a class="dropdown-item" asp-controller="Zahtjev" asp-action="VrsteZahtjeva">Vrsta Zahtjeva</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" asp-controller="Zadaci" asp-action="Index">Zadaci (JTP) </a></li>
+                        <li><a class="dropdown-item" asp-controller="Zadaci" asp-action="Status">Status Zadatka</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="~/JHtmlZadaci.html" >Zadaci JTable</a></li>
+                    </ul>
+
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Marko Simic
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" asp-action="Index" asp-controller="Osoba">Osoba(STP)</a></li>
+                        <li><a class="dropdown-item" asp-action="Index" asp-controller="Partner">Partner</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" asp-action="Index" asp-controller="Uloga">Uloga(JTP)</a></li>
+                        <li><a class="dropdown-item" asp-action="Index" asp-controller="VrstaUloge">Vrsta Uloge</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="~/uloga.html">Uloga Jtable</a></li>
+                    </ul>
+
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Fran Zlatar
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" asp-action="Kartice" asp-controller="Kartica">Kartica (STP)</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" asp-action="Transakcije" asp-controller="Transakcija">Transakcija (JTP)</a></li>
+                        <li><a class="dropdown-item" asp-action="VrsteTransakcija" asp-controller="Transakcija">Vrsta transakcije</a></li>
+                    </ul>
+
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Domagoj Pernar
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" asp-controller="Projekt" asp-action="Index">Projekt(STP)</a></li>
+                        <li><a class="dropdown-item" asp-controller="VrstaProjekta" asp-action="Index">Vrste Projekta</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" asp-controller="Dokumentacija" asp-action="Index">Dokumentacija(JTP)</a></li>
+                        <li><a class="dropdown-item" asp-controller="VrstaDokumentacije" asp-action="Index">Vrsta Dokumentacije</a></li>
+                    </ul>
+
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>

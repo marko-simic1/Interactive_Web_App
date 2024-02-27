@@ -1,0 +1,162 @@
+﻿@model RPPP_WebApp.ViewModels.KarticaViewModel
+
+<h2 class="text-center">Kartica</h2>
+
+<div class="my-3">
+    <a class="btn btn-primary" data-toggle="tooltip" title="Prijašnja kartica" asp-controller="Kartica" asp-action="PrethodnaKartica" asp-route-currentBrKartice="@Model.Kartica.BrKartice">
+        <i class="bi bi-arrow-left-circle-fill"></i>
+    </a>
+    <a class="btn btn-primary" data-toggle="tooltip" title="Sljedeća kartica" asp-controller="Kartica" asp-action="SljedecaKartica" asp-route-currentBrKartice="@Model.Kartica.BrKartice">
+        <i class="bi bi-arrow-right-circle-fill"></i>
+    </a>
+</div>
+
+<div class="d-flex gap-2 justify-content-center align-items-center w-100">
+
+    <button id="generatePdf" class="btn btn-danger mt-4">
+        PDF
+        <i class="bi bi-filetype-pdf"></i>
+    </button>
+
+    <button id="generateExcel" class="btn btn-success mt-4">
+        Excel
+        <i class="bi bi-file-earmark-spreadsheet"></i>
+    </button>
+
+</div>
+
+<form class="my-3 py-4" style="height: min-content" asp-controller="Kartica" asp-action="UpdateKartica" method="post">
+
+    <div class="left d-flex flex-column gap-3">
+
+        <span>
+            <label class="text-start fw-bold">Broj kartice: </label>
+            <input name="brKartice" type="text" class="form-control" placeholder="0000000" value="@Model.Kartica.BrKartice" disabled/>
+        </span>
+
+        <span>
+            <label class="text-start fw-bold">Stanje: </label>
+            <input name="stanje" type="text" class="form-control" placeholder="0" value="@Model.Kartica.Stanje" disabled/>
+        </span>
+
+        <span>
+            <label class="text-start fw-bold">Projekt: </label>
+            @if (Model.Projekt != null)
+            {
+                <input name="imeProjekta" type="text" class="form-control" value="@Model.Projekt.ImeProjekta" disabled />
+            } else
+            {
+                <input name="imeProjekta" type="text" class="form-control" value="Kartica nema projekt" disabled />
+            }
+        </span>
+
+        <div class="my-4">
+            <!--
+            <button type="submit" class="btn text-bg-success" data-toggle="tooltip" title="Uredi karticu">
+                <i class="bi bi-pen-fill fs-3"></i>
+            </button>
+            -->
+            <a class="btn text-bg-success" asp-controller="Kartica" asp-action="FormUpdateKartica" asp-route-id="@Model.Kartica.BrKartice">
+                <i class="bi bi-pen-fill fs-3"></i>
+            </a>
+            <a asp-controller="Kartica" asp-action="Kartice" class="btn text-bg-danger" data-toggle="tooltip" title="Odustani">
+                <i class="bi bi-escape fs-3"></i>
+            </a>
+        </div>
+    </div>
+
+</form>
+
+<hr />
+
+<h3 class="text-center">Popis transakcija</h3>
+
+<div class="d-flex justify-content-center" style="margin-bottom:20px">
+    <a class="btn btn-primary mt-4" asp-controller="Transakcija" asp-action="FormCreateTransakcija" asp-route-brKartice="@Model.Kartica.BrKartice">
+        <i class="bi bi-plus-lg"></i>
+        Nova transakcija
+    </a>
+</div>
+
+<table class="table table-sm table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="text-center">ID</th>
+            <th class="text-center">Model</th>
+            <th class="text-center">Poziv na br.</th>
+            <th class="text-center">Vrsta</th>
+            <th class="text-center">Iznos</th>
+            <th class="text-center">Datum</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var transakcija in Model.Transakcije)
+        {
+            <tr>
+                <td class="text-center">@transakcija.IdTrans</td>
+                <td class="text-center">@transakcija.Model</td>
+                <td class="text-center">@transakcija.PozivNaBr</td>
+                <td class="text-center">
+                    @if (transakcija.IdVrsteNavigation != null)
+                    {
+                        @transakcija.IdVrsteNavigation.ImeVrste
+                    }
+                    else
+                    {
+                        <text>-</text>
+                    }
+                </td>
+                <td class="text-center">@transakcija.Iznos</td>
+                <td class="text-center">@transakcija.Datum</td>
+                <td>
+                    <a class="btn btn-primary" asp-controller="Transakcija" asp-action="FormUpdateTransakcija" asp-route-redirect="0" asp-route-id="@transakcija.IdTrans">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                </td>
+                <td>
+                    <form asp-controller="Transakcija" asp-action="DeleteTransakcija" method="post"
+                    onsubmit="return confirm('Sigurno želiš obrisati transakciju?');">
+                        <input type="hidden" name="id" value="@transakcija.IdTrans" />
+                        <input type="hidden" name="redirect" value="0">
+                        <input type="hidden" name="brKartice" value="@Model.Kartica.BrKartice">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    document.getElementById('generatePdf').addEventListener('click', function () {
+        var brKartice = @Model.Kartica.BrKartice;
+        var url = '@Url.Action("KarticaMDPdf", "Report")' + '?brKartice=' + brKartice;
+
+        fetch(url, {
+            method: 'GET'
+        }).then(response => {
+            if (response.ok) {
+                return response.blob();
+            } else {
+                console.error('Failed to generate PDF');
+            }
+        }).then(blob => {
+            // Create a download link for the PDF
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Kartica-Transakcije.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }).catch(e => alert(`Pdf nije dobro generiran, molim pokušajte ponovo`));
+    });
+
+    document.getElementById('generateExcel').addEventListener('click', function () {
+        window.location.href = '@Url.Action("KarticaMDExcel", "Report")' + '?brKartice=' + @Model.Kartica.BrKartice;
+    });
+</script>

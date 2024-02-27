@@ -1,0 +1,165 @@
+﻿@using RPPP_WebApp.Controllers
+@model RPPP_WebApp.ViewModels.VrsteDokumentacijeViewModel
+
+@{
+    ViewData["Title"] = "Vrste dokumentacije";
+}
+
+<h1>Vrste dokumentacije</h1>
+
+@*
+<div>
+    <a asp-action="Create" class="btn btn-primary">Dodaj novu vrstu dokumentacije</a>
+</div>
+*@
+
+<form asp-action="Create" method="post"
+      class="d-flex justify-content-start align-items-center gap-2">
+    <label for="ImeVrste">Ime vrste:</label>
+    <input required name="ImeVrste" placeholder="Ime vrste" />
+    <button type="submit" class="btn btn-primary">
+        +
+    </button>
+</form>
+
+<hr />
+
+<pager page-info="@Model.PagingInfo" page-action="Index" page-title="Unesite željenu stranicu"
+       class="float-end">
+</pager>
+
+<table class="table table-sm table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                <a asp-route-sort="1" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 1 ? !Model.PagingInfo.Ascending : true)">
+                    Naziv vrste
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vrstaDok in Model.VrsteDokumentacija)
+        {
+            <partial name="Get" model="vrstaDok" />
+        }
+    </tbody>
+    @*
+    <tbody>
+    @foreach (var item in Model.VrsteDokumentacija)
+    {
+    <tr>
+    <td class="text-left">
+    @item.NazivVrsteDokumentacije
+    </td>
+    <td>
+    <a asp-action="Edit"
+    asp-route-id="@item.IdVrsteDokumentacije"
+    asp-route-page="@Model.PagingInfo.CurrentPage"
+    asp-route-sort="@Model.PagingInfo.Sort"
+    asp-route-ascending="@Model.PagingInfo.Ascending"
+    class="btn btn-sm btn-warning" title="Uredi">Uredi</a>
+    </td>
+    <td>
+
+    <form asp-action="Delete" method="post"
+    asp-route-id="@item.IdVrsteDokumentacije"
+    asp-route-page="@Model.PagingInfo.CurrentPage"
+    asp-route-sort="@Model.PagingInfo.Sort"
+    asp-route-ascending="@Model.PagingInfo.Ascending">
+    <input type="hidden" name="IdVrsteDokumentacije" value="@item.IdVrsteDokumentacije" />
+    <button hx-confirm="Jeste li sigurni da želite obrisati vrstu dokumentacije?"
+    hx-delete="@Url.Action("Delete", "VrstaDokumentacije", new { id = item.IdVrsteDokumentacije })"
+    type="submit" class="btn btn-sm btn-danger delete" title="Obriši">
+    Obriši
+    </button>
+
+    </form>
+    <td />
+    </tr>
+    }
+    </tbody>
+    *@
+</table>
+
+<button id="generatePdfButton" class="btn btn-primary">Izvezite PDF</button>
+<button id="generateExcelButton" class="btn btn-success">Izvezite Excel</button>
+
+
+<h5 class="text-center">Uvoz podataka korištenjem Excela</h5>
+
+<form method="post" enctype="multipart/form-data" action="@Url.Action("ImportPartnerExcel", "VrstaDokumentacije")">
+    <div class="mb-3">
+        <label for="excelFile" class="form-label">Odaberite Excel datoteku:</label>
+        <input type="file" class="form-control" id="excelFile" name="file" accept=".xlsx">
+    </div>
+    <button type="submit" class="btn btn-primary">Uvezi podatke</button>
+</form>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+    <script>
+        var importStatus = '@(TempData["imported"])';
+        if (importStatus === 'True') {
+            alert("Podaci su uspješno uvezeni.");
+        } else if (importStatus === 'False') {
+            var importError = '@(TempData["importError"])';
+            alert("Greška prilikom uvoza podataka: " + importError);
+        }
+        document.getElementById('generatePdfButton').addEventListener('click', function () {
+            // Use AJAX or other methods to call the action that generates the PDF
+            fetch('@Url.Action("VrstaDokumentacijePDF", "Report")', {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    console.error('Failed to generate PDF');
+                }
+            }).then(blob => {
+                // Create a download link for the PDF
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'vrsteDokumentacije.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        });
+
+        document.getElementById('generateExcelButton').addEventListener('click', function () {
+
+            window.location.href = '@Url.Action("VrstaDokumentacijeExcel", "Report")';
+        });
+    </script>
+}
+
+@if (TempData["used"] != null && (bool)TempData["used"])
+{
+    <script>
+        alert("Vrsta dokumentacije se koristi");
+    </script>
+}
+@if (TempData["deleted"] != null && (bool)TempData["deleted"])
+{
+    <script>
+        alert("Vrsta dokumentacije je obrisana");
+    </script>
+}
+@if (TempData["updated"] != null && (bool)TempData["updated"])
+{
+    <script>
+        alert("Vrsta dokumentacije je ažurirana");
+    </script>
+}
+@if (TempData["created"] != null && (bool)TempData["created"])
+{
+    <script>
+        alert("Vrsta dokumentacije je stvorena");
+    </script>
+}

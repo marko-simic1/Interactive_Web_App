@@ -1,0 +1,266 @@
+﻿@model RPPP_WebApp.ViewModels.ZahtjevViewModel
+
+<h2 class="mt-2 text-center mt-4">Zahtjevi</h2>
+
+
+
+<div class="d-flex flex-column align-items-center gap-3">
+
+    <div class="d-flex gap-2 align-items-center">
+
+        <button id="generatePdf" class="btn btn-danger mt-4">
+            PDF
+            <i class="bi bi-filetype-pdf"></i>
+        </button>
+
+        <button id="generateExcel" class="btn btn-success mt-4">
+            Excel
+            <i class="bi bi-file-earmark-spreadsheet"></i>
+        </button>
+
+    </div>
+
+
+    <a class="btn btn-primary mt-4" asp-controller="Zahtjev" asp-action="FormCreateZahtjev" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-sort="@Model.PagingInfo.Sort" asp-route-ascending="@Model.PagingInfo.Ascending">
+        <i class="bi bi-plus-lg"></i>
+        Novi zahtjev
+    </a>
+
+</div>
+
+<pager page-info="@Model.PagingInfo" page-action="Zahtjevi" page-title="Unesite željenu stranicu"
+       class="float-end">
+</pager>
+
+<div class="table-responsive">
+    <table class="table table-striped my-4">
+        <thead>
+            <tr>
+                <th>
+                    <a asp-route-sort="1" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 1 ? !Model.PagingInfo.Ascending : true)">
+                        Naslov
+                    </a>
+
+                </th>
+                <th>
+                    <a asp-route-sort="2" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 2 ? !Model.PagingInfo.Ascending : true)">
+                        Opis
+                    </a>
+                </th>
+                <th>
+                    <a asp-route-sort="3" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 3 ? !Model.PagingInfo.Ascending : true)">
+                        Projekt
+                    </a>
+
+                </th>
+                <th>
+                    <a asp-route-sort="4" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 4 ? !Model.PagingInfo.Ascending : true)">
+                        Vrsta
+                    </a>
+                </th>
+                <th>
+                    <a asp-route-sort="5" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 5 ? !Model.PagingInfo.Ascending : true)">
+                        Broj zadataka
+                    </a>
+                </th>
+                <th>
+
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+
+        <tbody class="table-group-divider">
+            @foreach (var zahtjev in Model.Zahtjevi)
+            {
+                <tr class="fs-6">
+                    <td>
+                        <a asp-controller="Zahtjev" asp-action="ZahtjevMD" asp-route-id="@zahtjev.IdZahtjeva">
+                            @zahtjev.Naslov
+                        </a>
+                    </td>
+                    <td>
+                        @if (zahtjev.Opis != null && zahtjev.Opis.Length > 30)
+                        {
+                            <span class="truncated-text" data-full-text="@zahtjev.Opis">
+                                <span class="textOpis user-select-all">
+                                    @zahtjev.Opis.Substring(0, 30)
+                                </span>
+                                <span class="expand-button text-danger p-1 w-100 fs-5" style="cursor: pointer">
+                                    ...
+                                </span>
+                                <span class="truncate-button d-none p-3 text-danger" style="cursor: pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707" />
+                                    </svg>
+                                </span>
+                            </span>
+                        }
+                        else
+                        {
+                            @zahtjev.Opis
+                        }
+                    </td>
+                    <td>
+                        @if (zahtjev.IdProjektaNavigation != null)
+                        {
+                            @zahtjev.IdProjektaNavigation.ImeProjekta
+                        }
+                        else
+                        {
+                            <span class="text-danger">Ne pripada projektu</span>
+                        }
+                    </td>
+                    <td>
+                        @if (zahtjev.IdVrsteNavigation != null)
+                        {
+                            @zahtjev.IdVrsteNavigation.ImeZahtjeva
+                        }
+                        else
+                        {
+                            <span class="text-danger">Nema vrste</span>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @zahtjev.Zadatak.Count()
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" asp-controller="Zahtjev" asp-action="FormUpdateZahtjev" asp-route-id="@zahtjev.IdZahtjeva" asp-route-CurrentPage="@Model.PagingInfo.CurrentPage" asp-route-Sort="@Model.PagingInfo.Sort" asp-route-Ascending="@Model.PagingInfo.Ascending">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger delete-btn" data-id="@zahtjev.IdZahtjeva">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <form method="post" enctype="multipart/form-data" onsubmit="return importFunction()"  action="@Url.Action("ImportZahtjevi", "Zahtjev")" class="mb-5" >
+        <div class="mb-3">
+            <label for="excelFile" class="form-label">Odaberite Excel datoteku:</label>
+            <input type="file" class="form-control btn" id="excelFile" name="file" accept=".xlsx">
+        </div>
+        <button type="submit" class="btn btn-primary">Uvezi podatke</button>
+    </form>
+
+</div>
+
+<script src="~/js/ZahtjevZadaci/Zahtjevi.js" asp-append-version="true"></script>
+
+@if (TempData.ContainsKey("SuccessMessage"))
+{
+    <div style="position:absolute; bottom: 2rem; right: 2rem;" class="toast bg-success text-light" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Uspjeh</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            @TempData["SuccessMessage"]
+        </div>
+    </div>
+
+    <script>
+        // Show the toast when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            var toast = new bootstrap.Toast(document.querySelector('.toast'));
+            toast.show();
+        });
+    </script>
+}
+
+@if (TempData.ContainsKey("NotFoundMessage"))
+{
+    <div style="position:absolute; bottom: 2rem; right: 2rem;" class="toast bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Uspjeh</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            @TempData["NotFoundMessage"]
+        </div>
+    </div>
+
+    <script>
+        // Show the toast when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            var toast = new bootstrap.Toast(document.querySelector('.toast'));
+            toast.show();
+        });
+    </script>
+}
+
+@if (TempData.ContainsKey("ServerError"))
+{
+    <div style="position:absolute; bottom: 2rem; right: 2rem;" class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Uspjeh</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            @TempData["ServerError"]
+        </div>
+    </div>
+
+    <script>
+        // Show the toast when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            var toast = new bootstrap.Toast(document.querySelector('.toast'));
+            toast.show();
+        });
+    </script>
+}
+
+
+
+
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+
+    <script>
+        document.getElementById('generatePdf').addEventListener('click', function () {
+            fetch('@Url.Action("ZahtjeviPdf", "Report")', {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    console.error('Failed to generate PDF');
+                }
+            }).then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'zahtjevi.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            })
+            .catch(error => {
+                console.error('Failed to generate PDF');
+                alert("Greška prilikom generiranja PDF-a, molim pokušati ponovno.");
+            });
+        });
+
+        document.getElementById('generateExcel').addEventListener('click', function () {
+            window.location.href = '@Url.Action("ZahtjeviExcel", "Report")';
+        });
+    </script>
+
+    <script>
+        function importFunction() {
+
+            setTimeout(() => {
+                document.getElementById("excelFile").value = "";
+            }, 2000);
+
+            return true;
+        }
+    </script>
+}

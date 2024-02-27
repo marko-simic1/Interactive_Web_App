@@ -1,0 +1,31 @@
+﻿@model RPPP_WebApp.ViewModels.DokumentacijaViewModel
+@using RPPP_WebApp.Controllers
+
+<tr hx-target="this" hx-swap="outerHTML">
+    <td>@Model.ImeDok</td>
+    <td>@Model.imeProjekta</td>
+    <td>@Model.imeVrste</td>
+    <td>
+        <a class="btn btn-sm btn-warning"
+           hx-get="@Url.Action(nameof(DokumentacijaController.Edit), new { id = Model.IdDok })"
+           title="Ažuriraj">Ažuriraj</a>
+    </td>
+    <td>
+        <form asp-action="Delete" method="delete">
+            <input type="hidden" name="IdDok" value="@Model.IdDok" />
+            <button class="btn btn-sm btn-danger delete"
+                    hx-delete="@Url.Action(nameof(DokumentacijaController.Delete), new { id = Model.IdDok })"
+                    hx-confirm="Obrisati dokument?"
+                    title="Obriši">
+                Obriši
+            </button>
+        </form>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

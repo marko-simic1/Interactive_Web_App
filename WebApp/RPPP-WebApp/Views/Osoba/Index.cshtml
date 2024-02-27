@@ -1,0 +1,174 @@
+﻿@model OsobaViewModel
+@using RPPP_WebApp.Controllers;
+@{
+    ViewBag.Title = "Osoba";
+}
+
+<h2 class="text-center">Popis osoba</h2>
+
+<h5 class="text-center"><a asp-action="Create">Unos nove osobe</a></h5>
+<br />
+<br />
+
+<pager page-info="@Model.PagingInfo" page-action="Index" page-title="Unesite željenu stranicu"
+       class="float-end">
+</pager>
+
+
+<table id="osobaTable" class="table table-sm table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="text-center">
+                <a asp-route-sort="1" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 1 ? !Model.PagingInfo.Ascending : true)">
+                    Ime
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="2" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 2 ? !Model.PagingInfo.Ascending : true)">
+                    Prezime
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="3" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 3 ? !Model.PagingInfo.Ascending : true)">
+                    Id Osobe
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="4" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 4 ? !Model.PagingInfo.Ascending : true)">
+                    Telefon
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="5" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 5 ? !Model.PagingInfo.Ascending : true)">
+                    Email
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="6" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 6 ? !Model.PagingInfo.Ascending : true)">
+                    IBAN
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var osoba in Model.osobe)
+        {
+            <partial name="Get" model="osoba" />
+        }
+    </tbody>
+    
+    @*
+    <tbody>
+        @foreach (var osoba in Model.Osobe)
+        {
+            <tr>
+                <td class="text-center">
+                    <a asp-action="index2" asp-route-id="@osoba.IdOsoba" title="Ime">@osoba.Ime</a>
+                </td>
+                <td class="text-center">@osoba.Prezime</td>
+                <td class="text-center">@osoba.IdOsoba</td>
+                <td class="text-center">@osoba.Telefon</td>
+                <td class="text-center">@osoba.Email</td>
+                <td class="text-center">@osoba.Iban</td>
+                <td>
+                    <a asp-action="Edit"
+                       asp-route-id="@osoba.IdOsoba"
+                       class="btn btn-sm" title="Ažuriraj">
+                       <i class="bi bi-arrow-clockwise">
+                       </i>
+                    </a>
+                </td>
+                <td>
+                    <form asp-action="Delete" asp-route-id="@osoba.IdOsoba" method="post">
+                        <input type="hidden" name="id" value="@osoba.IdOsoba" />
+                        <button type="submit" class="btn btn-sm btn-danger delete" title="Obriši">
+                            <i class="bi bi-trash">
+                            </i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    *@
+</table>
+<button id="generatePdfButton" class="btn btn-primary">Izvezite PDF</button>
+<button id="generateExcelButton" class="btn btn-success">Izvezite Excel</button>
+
+<h5 class="text-center">Uvoz podataka korištenjem Excela</h5>
+
+<form method="post" enctype="multipart/form-data" action="@Url.Action("ImportOsobaExcel", "Osoba")">
+    <div class="mb-3">
+        <label for="excelFile" class="form-label">Odaberite Excel datoteku:</label>
+        <input type="file" class="form-control" id="excelFile" name="file" accept=".xlsx">
+    </div>
+    <button type="submit" class="btn btn-primary">Uvezi podatke</button>
+</form>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+    
+    <partial name="IncludeValidation" />
+    <script>
+        var importStatus = '@(TempData["imported"])';
+        if (importStatus === 'True') {
+            alert("Podaci su uspješno uvezeni.");
+        } else if (importStatus === 'False') {
+            var importError = '@(TempData["importError"])';
+            alert("Greška prilikom uvoza podataka: " + importError);
+        }
+        document.getElementById('generatePdfButton').addEventListener('click', function () {
+            // Use AJAX or other methods to call the action that generates the PDF
+            fetch('@Url.Action("OsobePDF", "Report")', {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    console.error('Failed to generate PDF');
+                }
+            }).then(blob => {
+                // Create a download link for the PDF
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'osobe.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        });
+
+        document.getElementById('generateExcelButton').addEventListener('click', function () {
+
+            window.location.href = '@Url.Action("OsobaExcel", "Report")';
+        });
+    </script>
+}
+
+@if (TempData["used"] != null && (bool)TempData["used"])
+{
+    <script>
+        alert("Osoba se koristi");
+    </script>
+}
+@if (TempData["deleted"] != null && (bool)TempData["deleted"])
+{
+    <script>
+        alert("Osoba je obrisana");
+    </script>
+}
+@if (TempData["updated"] != null && (bool)TempData["updated"])
+{
+    <script>
+        alert("Osoba je ažurirana");
+    </script>
+}
+@if (TempData["created"] != null && (bool)TempData["created"])
+{
+    <script>
+        alert("Osoba je stvorena");
+    </script>
+}

@@ -1,0 +1,150 @@
+﻿@model RPPP_WebApp.ViewModels.ZadaciViewModel
+@{
+}
+
+<h2 class="mt-2 text-center mt-4">Vrste Statusa</h2>
+
+
+<form asp-action="CreateStatus" method="post"
+      class="d-flex justify-content-start align-items-center gap-2">
+    <label for="ImeStatusa">Ime statusa:</label>
+    <input required name="ImeStatusa" placeholder="Need" />
+    <button type="submit" class="btn">
+        <i class="bi bi-plus-circle-fill text-primary fs-3"></i>
+    </button>
+</form>
+
+<pager page-info="@Model.PagingInfo" page-action="Status" page-title="Unesite željenu stranicu"
+       class="float-end">
+</pager>
+
+<div class="table-responsive">
+    <table class="table table-striped my-4">
+        <thead>
+            <tr>
+                <th>
+
+                    <a asp-route-sort="1" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 1 ? !Model.PagingInfo.Ascending : true)">
+                        Vrsta statusa
+                    </a>
+
+                </th>
+                <th>
+                    <a asp-route-sort="2" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 2 ? !Model.PagingInfo.Ascending : true)">
+                        Broj zadataka s ovim statusom
+                    </a>
+                </th>
+                <th>
+
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+
+        <tbody class="table-group-divider">
+            @foreach (var status in Model.Statusi)
+            {
+                <tr class="fs-6">
+                    <td>
+                        @status.ImeStatusa
+                    </td>
+                    <td>
+                        @status.Zadatak.Count()
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" asp-controller="Zadaci" asp-action="EditFormStatus" asp-route-id="@status.IdStatusa">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger delete-btn" data-id="@status.IdStatusa">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script src="~/js/ZahtjevZadaci/VrsteStatusa.js" asp-append-version="true"></script>
+
+@if (TempData.ContainsKey("SuccessMessage"))
+{
+    <div style="position:absolute; bottom: 2rem; right: 2rem;" class="toast bg-success text-light" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Uspjeh</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            @TempData["SuccessMessage"]
+        </div>
+    </div>
+
+    <script>
+        // Show the toast when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            var toast = new bootstrap.Toast(document.querySelector('.toast'));
+            toast.show();
+        });
+    </script>
+}
+
+@if (TempData.ContainsKey("NotFoundMessage"))
+{
+    <div style="position:absolute; bottom: 2rem; right: 2rem;" class="toast bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Uspjeh</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            @TempData["NotFoundMessage"]
+        </div>
+    </div>
+
+    <script>
+        // Show the toast when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            var toast = new bootstrap.Toast(document.querySelector('.toast'));
+            toast.show();
+        });
+    </script>
+}
+
+@if (TempData.ContainsKey("ServerError"))
+{
+    <div style="position:absolute; bottom: 2rem; right: 2rem;" class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Uspjeh</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            @TempData["ServerError"]
+        </div>
+    </div>
+
+    <script>
+        // Show the toast when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            var toast = new bootstrap.Toast(document.querySelector('.toast'));
+            toast.show();
+        });
+    </script>
+}
+
+<script>
+    function checkIme() {
+        if (document.querySelector("input[name='ImeVrste']").value.trim() === "") {
+            alert("Ime vrste Statusa je obavezano!");
+            return false;
+        });
+
+        return true;
+    }
+</script>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+}

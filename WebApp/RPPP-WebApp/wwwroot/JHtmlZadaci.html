@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Pregled svih zadataka</title>
+    <link href="lib/jqueryui/themes/base/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="lib/jtable/lib/themes/lightcolor/blue/jtable.min.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" asp-append-version="true" />
+    <link href="~/lib/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            Filtriraj po naslovu zadatka: <input type="text" id="filter" />
+            <button id="btnFilter" class="btn btn-primary">Filtriraj</button>
+        </div>
+        <div class="row">
+            <div class="col-sm-12" id="zadaci">
+            </div>
+        </div>
+    </div>
+
+    <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: 5rem; font-size: larger;">
+        <p> Podaci se uspješno dohvate i pošalju na klijenta (moguče vidjteti u dveloper tools u brosweru pod mreža (netwroek tab) i u dogovoru (response) se nalaze svi traženi podaci).</p>
+        <p>No posotji bug <i class="bi bi-bug-fill"></i> kod prikazivanja koji nisam mogao pronači. <i class="bi bi-emoji-frown-fill"></i> </p>
+    </div>
+
+    <script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/jqueryui/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="lib/jtable/lib/jquery.jtable.min.js"></script>
+    <script type="text/javascript" src="lib/jtable/lib/localization/jquery.jtable.hr.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#zadaci').jtable({
+                title: 'Popis zadataka',
+                paging: true,
+                pageSize: 5,
+                sorting: true,
+                defaultSorting: 'IdZadatka DESC',
+                actions: {
+                    listAction: 'jtable/zadatak/getall',
+                    createAction: 'jtable/zadatak/create',
+                    updateAction: 'jtable/zadatak/update',
+                    deleteAction: 'jtable/zadatak/delete'
+                },
+                fields: {
+                    IdZadatka: {
+                        key: true,
+                        list: false
+                    },
+                    Naslov: {
+                        title: 'Naslov',
+                        width: '20%'
+                    },
+                    //IdZahtjevaNavigation: {
+                    //    title: 'Zahtjev',
+                    //    width: '20%',
+                    //    options: 'Lookup/Zahtjev'
+                    //},
+                    PlanPocetak: {
+                        title: 'PlanPocetak',
+                        width: '30%'
+                    },
+                    PlanKraj: {
+                        title: 'PlanKraj',
+                        width: '30%'
+                    },
+                    Prioritet: {
+                        title: 'Prioritet',
+                        width: '20%',
+                    }
+                }
+            });
+
+            $("#zadaci").jtable('load');
+
+            $("#btnFilter").click(function (event) {
+                event.preventDefault();
+                $("#zadaci").jtable('load', {
+                    search: $('#filter').val()
+                });
+            });
+        });
+    </script>
+
+
+    <script src="~/lib/jquery/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+
+</body>
+</html>

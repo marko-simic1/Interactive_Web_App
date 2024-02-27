@@ -1,0 +1,80 @@
+﻿@*
+
+@model RPPP_WebApp.Models.Uloga
+
+@{
+    ViewBag.Title = "Ažuriranje uloge";
+}
+
+<form asp-route-id="@Model.IdUloge"
+      asp-route-page="@ViewBag.Page"
+      asp-route-sort="@ViewBag.Sort"
+      asp-route-ascending="@ViewBag.Ascending"
+      method="post">
+    <div asp-validation-summary="All"></div>
+    <div class="form-group">
+        <label asp-for="ImeUloge"></label>
+        <div><span asp-validation-for="ImeUloge" class="text-danger"></span></div>
+        <input asp-for="ImeUloge" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Opis"></label>
+        <div><span asp-validation-for="Opis" class="text-danger"></span></div>
+        <textarea asp-for="Opis" class="form-control"></textarea>
+    </div>
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Spremi</button>
+        <a asp-action="Index"
+           asp-route-page="@ViewBag.Page"
+           asp-route-sort="@ViewBag.Sort"
+           asp-route-ascending="@ViewBag.Ascending"
+           class="btn btn-secondary">Odustani</a>
+    </div>
+</form>
+
+@section scripts {
+    <partial name="IncludeValidation" />
+}
+
+*@
+
+@model RPPP_WebApp.Models.Uloga
+
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-start">
+        <input asp-for="IdUloge" class="form-control" disabled />
+    </td>
+    <td class="text-start">
+        <input asp-for="ImeUloge" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="Opis" class="form-control" />
+    </td>
+    <td>
+        <input type="hidden" asp-for="IdUloge" />
+        <button class="btn btn-sm cancel" hx-include="closest tr"
+                hx-post="@Url.Action(nameof(UlogaController.Edit), new { id = Model.IdUloge })"
+                title="Spremi">
+            Spremi
+        </button>
+    </td>
+    <td>
+        <button class="btn btn-sm cancel"
+                hx-get="@Url.Action(nameof(UlogaController.Get), new { id = Model.IdUloge })"
+                title="Odustani">
+
+            Odustani
+        </button>
+    </td>
+    <td>
+        <div asp-validation-summary="All"></div>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

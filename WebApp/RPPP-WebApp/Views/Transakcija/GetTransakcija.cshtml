@@ -1,0 +1,59 @@
+﻿@model TransakcijeViewModel
+@using RPPP_WebApp.Controllers
+
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-center">
+        @Model.IdTrans
+    </td>
+    <td class="text-center">
+        @Model.Model
+    </td>
+    <td class="text-center">
+        @Model.PozivNaBr
+    </td>
+    <td class="text-center">
+        @if(Model.IdVrsteNavigation != null) {
+            @Model.IdVrsteNavigation.ImeVrste
+        }
+        else
+        {
+            <text></text>
+        }
+
+    </td>
+    <td class="text-center">
+        @Model.Iznos
+    </td>
+    <td class="text-center">
+        @Model.Datum
+    </td>
+    <td class="text-center">
+        @Model.Opis
+    </td>
+    <td class="text-center">
+        @Model.BrKartice
+    </td>
+    <td>
+        <a class="btn btn-primary" title="Ažuriraj" hx-get="@Url.Action(nameof(TransakcijaController.EditTransakcija), new { id = Model.IdTrans })">
+            <i class="bi bi-pencil-square"></i>
+        </a>
+    </td>
+    <td>
+        <form asp-controller="Transakcija" asp-action="DeleteTransakcija" method="post"
+            onsubmit="return confirm('Sigurno želiš obrisati transakciju?');">
+            <input type="hidden" name="id" value="@Model.IdTrans" />
+            <input type="hidden" name="redirect" value="1">
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-trash3"></i>
+            </button>
+        </form>
+    </td>
+
+</tr>
+
+@section scripts {
+        <script src="~/js/pager.js" asp-append-version="true"></script>
+        <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+        <partial name="IncludeValidation" />
+}

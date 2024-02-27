@@ -1,0 +1,68 @@
+﻿@model RPPP_WebApp.Models.Projekt
+
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-start">
+        <input asp-for="ImeProjekta" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="Kratica" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="Sazetak" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="DatumPoc" class="form-control date-input" />
+    </td>
+    <td class="text-start">
+        <input asp-for="DatumZav" class="form-control  date-input" />
+    </td>
+    <td class="text-start">
+        <input asp-for="BrKartice" class="form-control numeric-input" />
+    </td>
+    <td class="text-start">
+        <select asp-for="IdVrste" class="form-control" asp-items="ViewBag.VrsteProjekata">
+            <option disabled selected value="">Odaberite vrstu projekta</option>
+        </select>
+    </td>
+
+    <td>
+        <input type="hidden" asp-for="IdProjekta" />
+        <button class="btn btn-sm cancel"
+                hx-post="@Url.Action(nameof(ProjektController.Edit2), new { id = Model.IdProjekta })"
+                title="Spremi">
+
+            Spremi
+        </button>
+    </td>
+    <td>
+        <button class="btn btn-sm cancel"
+                hx-trigger="reload"
+                title="Odustani">
+
+            Odustani
+        </button>
+    </td>
+    <td>
+        <button class="btn btn-sm cancel"
+                title="pogledajPromjene"
+                onclick="pokreni()">
+
+            Pogledaj promjene!
+        </button>
+    </td>
+    <td>
+        <div asp-validation-summary="All"></div>
+    </td>
+</tr>
+
+
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+    <partial name="IncludeValidation" />
+    <script>function pokreni() {
+            window.location.reload;
+        }</script>
+
+}

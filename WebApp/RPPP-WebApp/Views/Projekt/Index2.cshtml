@@ -1,0 +1,198 @@
+﻿@model RPPP_WebApp.ViewModels.Projekt2ViewModel
+
+<h2 class="mt-4">Projekt</h2>
+<div>
+    <a asp-action="PrethodniProjekt" asp-route-crntProjektId="@Model.Projekt.IdProjekta" class="btn btn-primary">Previous Project</a>
+    <a asp-action="SljedeciProjekt" asp-route-crntProjektId="@Model.Projekt.IdProjekta" class="btn btn-primary">Next Project</a>
+</div>
+
+<form class="my-3 py-4" style="height: min-content">
+
+    <div class="left d-flex flex-column gap-3">
+
+        <span>
+            <label class="text-start fw-bold">Naziv projekta: </label>
+            <input type="text" class="form-control" placeholder="Naziv projekta" value="@Model.Projekt.ImeProjekta" readonly />
+        </span>
+        <span>
+            <label class="text-start fw-bold">Kratica: </label>
+            <input type="text" class="form-control" placeholder="Kratica" value="@Model.Projekt.Kratica" readonly />
+        </span>
+        <span>
+            <label class="text-start fw-bold">Sazetak: </label>
+            <input type="text" class="form-control" placeholder="Sazetak" value="@Model.Projekt.Sazetak" readonly />
+        </span>
+        <span>
+            <label class="text-start fw-bold">Datum pocetka: </label>
+            <input type="text" class="form-control date-input" placeholder="Datum pocetka" value="@Model.Projekt.DatumPoc" readonly />
+        </span>
+        <span>
+            <label class="text-start fw-bold">Datum kraja: </label>
+            <input type="text" class="form-control date-input" placeholder="Datum kraja" value="@Model.Projekt.DatumZav" readonly />
+        </span>
+        <span>
+            <label class="text-start fw-bold">Broj kartice: </label>
+            <input type="text" class="form-control numeric-input" placeholder="Broj kartice" value="@Model.Projekt.BrKartice" readonly />
+        </span>
+
+
+
+        <a type="button" class="btn" title="Uredi zahtjev" hx-get="@Url.Action(nameof(ProjektController.Edit2), new { id = Model.Projekt.IdProjekta })">
+            Uredi
+        </a>
+        <a type="button" class="btn" title="Obriši" hx-confirm="Obrisati osobu?" hx-delete="@Url.Action(nameof(ProjektController.Delete2), new { index = Model.Projekt.IdProjekta })">
+            Obriši
+        </a>
+
+
+    </div>
+
+
+</form>
+
+
+
+
+<button id="generatePdfButton" class="btn btn-primary">Izvezite PDF</button>
+<button id="generateExcelButton" class="btn btn-success">Izvezite Excel</button>
+
+<div class="bold-line"></div>
+
+<h2 class="text-center mt-4">Dokumentacija</h2>
+
+
+
+<div class="d-flex justify-content-center">
+    <a class="btn btn-primary mt-4" asp-controller="Dokumentacija" asp-action="Create">
+        <i class="bi bi-plus-lg"></i>
+        Nova dokumentacija
+    </a>
+</div>
+<br />
+<br />
+@{
+    int x = 0;
+}
+@foreach (var i in Model.Dokumentacija)
+{
+    x = x + 1;
+}
+
+<table class="table table-sm table-striped table-hover">
+
+    @{
+        if (x > 0)
+        {
+            <thead>
+                <tr>
+                    <th class="text-center">
+                        Naziv dokumentacije
+                    </th>
+                    <th class="text-center">
+                        Vrsta dokumentacije
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var dokumentacija in Model.Dokumentacija)
+                {
+
+                    <tr>
+                        <td class="text-center">@dokumentacija.ImeDok</td>
+                        <td class="text-center">@dokumentacija.IdVrsteNavigation.ImeVrste</td>
+
+                    </tr>
+
+                }
+            </tbody>
+        }
+        else
+        {
+            <thead>
+                <tr>
+                    <th class="text-center">
+                        Naziv dokumentacije
+                    </th>
+                    <th class="text-center">
+                        Vrsta dokumentacije
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center" colspan="4">nema dokumentacije</td>
+
+                </tr>
+            </tbody>
+        }
+
+    }
+
+
+</table>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+    <script>
+        document.getElementById('generatePdfButton').addEventListener('click', function () {
+            // Use AJAX or other methods to call the action that generates the PDF
+            var id = @Model.Projekt.IdProjekta; // Get the Id from the model
+            var url = '@Url.Action("ProjektPDF2", "Report")' + '?id=' + id;
+            fetch(url, {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    console.error('Failed to generate PDF');
+                }
+            }).then(blob => {
+                // Create a download link for the PDF
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'projektMD.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        });
+
+        document.getElementById('generateExcelButton').addEventListener('click', function () {
+
+            window.location.href = '@Url.Action("ProjektExcel2", "Report")' + '?id=' + @Model.Projekt.IdProjekta;
+        });
+    </script>
+}
+
+@if (TempData["used"] != null && (bool)TempData["used"])
+{
+    <script>
+        alert("Projekt se koristi");
+    </script>
+}
+@if (TempData["deleted"] != null && (bool)TempData["deleted"])
+{
+    <script>
+        alert("Projekt je obrisana");
+    </script>
+}
+@if (TempData["updated"] != null && (bool)TempData["updated"])
+{
+    <script>
+        alert("Projekt je ažurirana");
+    </script>
+}
+@if (TempData["created"] != null && (bool)TempData["created"])
+{
+    <script>
+        alert("Projekt je stvorena");
+    </script>
+}
+
+

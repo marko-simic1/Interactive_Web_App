@@ -1,0 +1,147 @@
+﻿@model RPPP_WebApp.ViewModels.VrstaUlogeViewModel
+@{
+    ViewBag.Title = "Vrste Uloga";
+}
+
+<h2 class="text-center">Popis vrsta uloga</h2>
+
+<h5 class="text-center"><a asp-action="Create">Unos nove vrste uloge</a></h5>
+<br />
+<br />
+
+<pager page-info="@Model.PagingInfo" page-action="Index" page-title="Unesite željenu stranicu"
+       class="float-end">
+</pager>
+
+<table class="table table-sm table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="text-center">
+                <a asp-route-sort="1" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 1 ? !Model.PagingInfo.Ascending : true)">
+                    Id vrste
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="2" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 2 ? !Model.PagingInfo.Ascending : true)">
+                    Ime vrste
+                </a>
+            </th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vrsta in Model.vrste)
+        {
+            <partial name="Get" model="vrsta" />
+        }
+    </tbody>
+    @*
+    <tbody>
+        @foreach (var vrstauloge in Model.VrsteUloga)
+        {
+            <tr>
+                <td class="text-center">@vrstauloge.IdVrste</td>
+                <td class="text-center">@vrstauloge.ImeVrste</td>
+                <td>
+                    <a asp-action="Edit"
+                       asp-route-id="@vrstauloge.IdVrste"
+                       class="btn btn-sm" title="Ažuriraj">
+                        <i class="bi bi-arrow-clockwise">
+                        </i>
+                    </a>
+                </td>
+                <td>
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" name="id" value="@vrstauloge.IdVrste" />
+                        <button type="submit" class="btn btn-sm btn-danger delete" title="Obriši">
+                            <i class="bi bi-trash">
+                            </i>
+                        </button>
+                    </form>
+                </td>
+                
+
+            </tr>
+        }
+    </tbody>
+    *@
+</table>
+<button id="generatePdfButton" class="btn btn-primary">Izvezite PDF</button>
+<button id="generateExcelButton" class="btn btn-success">Izvezite Excel</button>
+
+<h5 class="text-center">Uvoz podataka korištenjem Excela</h5>
+
+<form method="post" enctype="multipart/form-data" action="@Url.Action("ImportVrsteUlogaExcel", "VrstaUloge")">
+    <div class="mb-3">
+        <label for="excelFile" class="form-label">Odaberite Excel datoteku:</label>
+        <input type="file" class="form-control" id="excelFile" name="file" accept=".xlsx">
+    </div>
+    <button type="submit" class="btn btn-primary">Uvezi podatke</button>
+</form>
+
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+    <script>
+        var importStatus = '@(TempData["imported"])';
+        if (importStatus === 'True') {
+            alert("Podaci su uspješno uvezeni.");
+        } else if (importStatus === 'False') {
+            var importError = '@(TempData["importError"])';
+            alert("Greška prilikom uvoza podataka: " + importError);
+        }
+        document.getElementById('generatePdfButton').addEventListener('click', function () {
+            fetch('@Url.Action("VrsteUlogaPDF", "Report")', {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    console.error('Failed to generate PDF');
+                }
+            }).then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'vrsteuloga.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        });
+
+        document.getElementById('generateExcelButton').addEventListener('click', function () {
+           
+            window.location.href = '@Url.Action("VrsteUlogaExcel", "Report")';
+        });
+    </script>
+}
+
+@if (TempData["used"] != null && (bool)TempData["used"])
+{
+    <script>
+        alert("Vrsta uloge se koristi");
+    </script>
+}
+@if (TempData["deleted"] != null && (bool)TempData["deleted"])
+{
+    <script>
+        alert("Vrsta uloge je obrisana");
+    </script>
+}
+@if (TempData["updated"] != null && (bool)TempData["updated"])
+{
+    <script>
+        alert("Vrsta uloge je ažurirana");
+    </script>
+}
+@if (TempData["created"] != null && (bool)TempData["created"])
+{
+    <script>
+        alert("Vrsta uloge je stvorena");
+    </script>
+}

@@ -1,0 +1,37 @@
+﻿@model RPPP_WebApp.ViewModels.ZahtjevViewModel
+
+@{
+    ViewData["Title"] = "Update vrsta zahtjeva";
+}
+
+<h2 class="text-center mt-4">@ViewData["Title"]</h2>
+
+<a asp-controller="Zahtjev" asp-action="VrsteZahtjeva">
+    <i class="bi bi-arrow-left-square-fill" style="font-size: 2rem; color: #0d6efd;"></i>
+</a>
+
+<form asp-action="UpdateVrstaZahtjev" onsubmit="return checkArguments()" method="post" class="d-flex flex-column align-items-center justify-content-center gap-3 my-5">
+
+    <input type="hidden" name="IdVrsteZah" value="@Model.VrstaZahtjev.IdVrste" />
+
+    <label class="align-self-start fw-bold" for="Ime">Ime vrste: </label>
+    <input class="w-100" name="Ime" value="@Model.VrstaZahtjev.ImeZahtjeva" />
+
+    <button type="submit" class="btn btn-primary w-10">Update</button>
+
+</form>
+
+
+<script>
+    function checkArguments() {
+        var imeInput = document.querySelector("input[name='Ime']");
+
+        if (imeInput.value.trim() === "") {
+            alert("Ime vrste zahtjeva je obavezano!");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+

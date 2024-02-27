@@ -1,0 +1,153 @@
+﻿@model RPPP_WebApp.ViewModels.PosaoViewModel
+
+<h2 class="mt-4">Posao</h2>
+<div>
+    <a asp-action="PrethodniPosao" asp-route-crntPosaoId="@Model.Posao.IdPosla" class="btn btn-primaryc">Previous Project</a>
+    <a asp-action="SljedeciPosao" asp-route-crntPosaoId="@Model.Posao.IdPosla" class="btn btn-primary">Next Project</a>
+</div>
+
+
+
+
+<form class="my-3 py-4" style="height: min-content">
+
+    <div class="left d-flex flex-column gap-3">
+
+        <span>
+            <label class="text-start fw-bold">Ime posla: </label>
+            <input type="text" class="form-control" placeholder="Ime posla" value="@Model.Posao.ImePosla" disabled />
+        </span>
+        <span>
+            <label class="text-start fw-bold">Opis posla: </label>
+            <input type="text" class="form-control" placeholder="Opis posla" value="@Model.Posao.Opis" disabled />
+        </span>
+
+
+
+        <a type="button" title="Uredi zahtjev" hx-get="@Url.Action(nameof(PosaoController.Edit2), new { id = Model.Posao.IdPosla })">
+            <i class="bi bi-pen-fill fs-3"></i>
+        </a>
+        <a type="button" title="Obriši" hx-confirm="Obrisati osobu?" hx-delete="@Url.Action(nameof(PosaoController.Delete2), new { index = Model.Posao.IdPosla })">
+            <i class="bi bi-trash-fill fs-3"></i>
+        </a>
+
+
+    </div>
+
+
+</form>
+<button id="generatePdfButton" class="btn btn-primary">Izvezite PDF</button>
+<button id="generateExcelButton" class="btn btn-success">Izvezite Excel</button>
+
+<div class="bold-line"></div>
+
+<h2 class="text-center mt-4">Osobe</h2>
+
+
+
+<div class="d-flex justify-content-center">
+    <a class="btn btn-primary mt-4" asp-controller="Osobaa" asp-action="Create">
+        <i class="bi bi-plus-lg"></i>
+        Nova osoba
+    </a>
+</div>
+<br />
+<br />
+
+<table class="table table-sm table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="text-center">
+                Id Osoba
+            </th>
+            <th class="text-center">
+                Ime
+            </th>
+            <th class="text-center">
+                Prezime
+            </th>
+            <th class="text-center">
+                Email
+            </th>
+            <th class="text-center">
+                Iban
+            </th>
+            <th class="text-center">
+                Telefon
+            </th>
+
+
+
+        </tr>
+    </thead>
+
+    <tbody>
+        @{
+
+            List<Osoba> osobe = new List<Osoba>();
+            foreach (var radiNa in Model.Posao.IdOsoba)
+            {
+                osobe.Add(radiNa);
+            }
+        }
+        @foreach (var att in osobe)
+        {
+            <tr>
+                <td class="text-center">@att.IdOsoba</td>
+                <td class="text-center">@att.Ime</td>
+                <td class="text-center">@att.Prezime</td>
+                <td class="text-center">@att.Email</td>
+                <td class="text-center">@att.Iban</td>
+                <td class="text-center">@att.Telefon</td>
+
+
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+
+    <script>
+        document.getElementById('generatePdfButton').addEventListener('click', function () {
+            // Use AJAX or other methods to call the action that generates the PDF
+            var id = @Model.Posao.IdPosla; // Get the Id from the model
+            var url = '@Url.Action("PosloviPDF2", "Report")' + '?id=' + id;
+
+            fetch(url, {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    console.error('Failed to generate PDF');
+                }
+            }).then(blob => {
+                // Create a download link for the PDF
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'poslovi.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        });
+
+        document.getElementById('generateExcelButton').addEventListener('click', function () {
+
+            window.location.href = '@Url.Action("PosaoExcel2", "Report")' + '?id=' + @Model.Posao.IdPosla;
+        });
+    </script>
+}

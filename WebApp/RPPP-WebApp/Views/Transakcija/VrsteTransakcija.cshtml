@@ -1,0 +1,153 @@
+﻿@model RPPP_WebApp.ViewModels.VrstaTransakcijeViewModel
+@{
+    ViewBag.Title = "Vrste transakcija";
+}
+
+<h2 class="text-center">Vrste transakcija</h2>
+
+<div class="d-flex justify-content-center">
+    <a class="btn btn-primary mt-4" asp-controller="Transakcija" asp-action="FormCreateVrstaTransakcije" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-sort="@Model.PagingInfo.Sort" asp-route-ascending="@Model.PagingInfo.Ascending">
+        <i class="bi bi-plus-lg"></i>
+        Nova vrsta
+    </a>
+</div>
+
+<br />
+<br />
+
+<pager page-info="@Model.PagingInfo" page-action="VrsteTransakcija" page-title="Unesite željenu stranicu"
+       class="float-end">
+</pager>
+
+
+<table id="transakcijaTable" class="table table-sm table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="text-center">
+                <a asp-route-sort="1" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 1 ? !Model.PagingInfo.Ascending : true)">
+                    ID
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="2" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 2 ? !Model.PagingInfo.Ascending : true)">
+                    Ime
+                </a>
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var vrsta in Model.vrste)
+        {
+            <partial name="GetVrsta" model="vrsta" />
+        }
+    </tbody>
+
+    @*
+    <tbody>
+        @foreach (var vrsta in Model.Vrste)
+        {
+            <tr>
+                <td class="text-center">
+                    @vrsta.IdVrste
+                </td>
+                <td class="text-center">
+                    @vrsta.ImeVrste
+                </td>
+                <td>
+                    <a class="btn btn-primary" asp-controller="Transakcija" asp-action="FormUpdateVrstaTransakcije" asp-route-id="@vrsta.IdVrste" asp-route-CurrentPage="@Model.PagingInfo.CurrentPage" asp-route-Sort="@Model.PagingInfo.Sort" asp-route-Ascending="@Model.PagingInfo.Ascending">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                </td>
+                <td>
+                    <form asp-controller="Transakcija" asp-action="DeleteVrstaTransakcije" method="post"
+                      onsubmit="return confirm('Sigurno želiš obrisati transakciju?');">
+                        <input type="hidden" name="id" value="@vrsta.IdVrste" />
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </form>
+                </td>
+
+            </tr>
+        }
+    </tbody>*@
+</table>
+
+<button id="generatePdfButton" class="btn btn-primary">Izvezite PDF</button>
+<button id="generateExcelButton" class="btn btn-success">Izvezite Excel</button>
+
+<h5 class="text-center">Uvoz podataka korištenjem Excela</h5>
+<form method="post" enctype="multipart/form-data" action="@Url.Action("ImportVrstaExcel", "Transakcija")">
+    <div class="mb-3">
+        <label for="excelFile" class="form-label">Odaberite Excel datoteku:</label>
+        <input type="file" class="form-control" id="excelFile" name="file" accept=".xlsx">
+    </div>
+    <button type="submit" class="btn btn-primary">Uvezi podatke</button>
+</form>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+    <script>
+        var importStatus = '@(TempData["imported"])';
+        if (importStatus === 'True') {
+            alert("Podaci su uspješno uvezeni.");
+        } else if (importStatus === 'False') {
+            var importError = '@(TempData["importError"])';
+            alert("Greška prilikom uvoza podataka: " + importError);
+        }
+        document.getElementById('generatePdfButton').addEventListener('click', function () {
+            fetch('@Url.Action("VrsteTransakcijaPDF", "Report")', {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    console.error('Failed to generate PDF');
+                }
+            }).then(blob => {
+                // Create a download link for the PDF
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'vrste_transakcija.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        });
+        document.getElementById('generateExcelButton').addEventListener('click', function () {
+            window.location.href = '@Url.Action("VrsteTransakcijaExcel", "Report")';
+        });
+    </script>
+}
+
+@if (TempData["used"] != null && (bool)TempData["used"])
+{
+    <script>
+        alert("Kartica se koristi");
+    </script>
+}
+@if (TempData["deleted"] != null && (bool)TempData["deleted"])
+{
+    <script>
+        alert("Kartica je obrisana");
+    </script>
+}
+@if (TempData["updated"] != null && (bool)TempData["updated"])
+{
+    <script>
+        alert("Kartica je ažurirana");
+    </script>
+}
+@if (TempData["created"] != null && (bool)TempData["created"])
+{
+    <script>
+        alert("Kartica je stvorena");
+    </script>
+}

@@ -1,0 +1,102 @@
+﻿@*
+@model RPPP_WebApp.Models.Partner
+
+@{
+    ViewBag.Title = "Ažuriranje partnera";
+}
+
+<form asp-route-id="@Model.IdPartnera"
+      asp-route-page="@ViewBag.Page"
+      asp-route-sort="@ViewBag.Sort"
+      asp-route-ascending="@ViewBag.Ascending"
+      method="post">
+    <div asp-validation-summary="All"></div>
+    <div class="form-group">
+        <label asp-for="Ime"></label>
+        <div><span asp-validation-for="Ime" class="text-danger"></span></div>
+        <input asp-for="Ime" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Oib"></label>
+        <div><span asp-validation-for="Oib" class="text-danger"></span></div>
+        <textarea asp-for="Oib" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <div><span asp-validation-for="Email" class="text-danger"></span></div>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Telefon"></label>
+        <div><span asp-validation-for="Telefon" class="text-danger"></span></div>
+        <input asp-for="Telefon" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Iban"></label>
+        <div><span asp-validation-for="Iban" class="text-danger"></span></div>
+        <input asp-for="Iban" class="form-control" />
+    </div>
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Spremi</button>
+        <a asp-action="Index"
+           asp-route-page="@ViewBag.Page"
+           asp-route-sort="@ViewBag.Sort"
+           asp-route-ascending="@ViewBag.Ascending"
+           class="btn btn-secondary">Odustani</a>
+    </div>
+</form>
+
+@section scripts {
+    <partial name="IncludeValidation" />
+}
+
+*@
+
+@model RPPP_WebApp.Models.Partner
+
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-start">
+        <input asp-for="Ime" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="Oib" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="Telefon" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="Email" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="Iban" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="Adresa" class="form-control" />
+    </td>
+    <td>
+        <input type="hidden" asp-for="IdPartnera" />
+        <button class="btn btn-sm cancel" hx-include="closest tr"
+                hx-post="@Url.Action(nameof(PartnerController.Edit), new { id = Model.IdPartnera })"
+                title="Spremi">
+            Spremi
+        </button>
+    </td>
+    <td>
+        <button class="btn btn-sm cancel"
+                hx-get="@Url.Action(nameof(PartnerController.Get), new { id = Model.IdPartnera })"
+                title="Odustani">
+
+            Odustani
+        </button>
+    </td>
+    <td>
+        <div asp-validation-summary="All"></div>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

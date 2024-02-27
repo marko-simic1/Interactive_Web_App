@@ -1,0 +1,70 @@
+﻿@*
+@model RPPP_WebApp.Models.VrstaUloge
+
+@{
+    ViewBag.Title = "Ažuriranje vrste uloge";
+}
+
+<form asp-route-id="@Model.IdVrste"
+      asp-route-page="@ViewBag.Page"
+      asp-route-sort="@ViewBag.Sort"
+      asp-route-ascending="@ViewBag.Ascending"
+      method="post">
+    <div asp-validation-summary="All"></div>
+    <div class="form-group">
+        <label asp-for="ImeVrste"></label>
+        <div><span asp-validation-for="ImeVrste" class="text-danger"></span></div>
+        <input asp-for="ImeVrste" class="form-control" />
+    </div>
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Spremi</button>
+        <a asp-action="Index"
+           asp-route-page="@ViewBag.Page"
+           asp-route-sort="@ViewBag.Sort"
+           asp-route-ascending="@ViewBag.Ascending"
+           class="btn btn-secondary">Odustani</a>
+    </div>
+</form>
+
+@section scripts {
+    <partial name="IncludeValidation" />
+}
+
+*@
+@model RPPP_WebApp.Models.VrstaUloge
+
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-start">
+        <input asp-for="IdVrste" class="form-control" disabled/>
+    </td>
+    <td class="text-start">
+        <input asp-for="ImeVrste" class="form-control" />
+    </td>
+    </td>
+    <td>
+        <input type="hidden" asp-for="IdVrste" />
+        <button class="btn btn-sm cancel" hx-include="closest tr"
+                hx-post="@Url.Action(nameof(VrstaUlogeController.Edit), new { id = Model.IdVrste })"
+                title="Spremi">
+            Spremi
+        </button>
+    </td>
+    <td>
+        <button class="btn btn-sm cancel"
+                hx-get="@Url.Action(nameof(VrstaUlogeController.Get), new { id = Model.IdVrste })"
+                title="Odustani">
+
+            Odustani
+        </button>
+    </td>
+    <td>
+        <div asp-validation-summary="All"></div>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

@@ -1,0 +1,84 @@
+﻿@model RPPP_WebApp.ViewModels.TransakcijaViewModel
+
+@{
+    ViewData["Title"] = "Uredi Transakciju";
+}
+
+<h2 class="text-center mt-4">@ViewData["Title"]</h2>
+
+<a asp-controller="Transakcija" asp-action="Transakcije" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-sort="@Model.PagingInfo.Sort" asp-route-ascending="@Model.PagingInfo.Ascending">
+    <i class="bi bi-arrow-left-square-fill" style="font-size: 2rem; color: #0d6efd;"></i>
+</a>
+
+<form asp-action="UpdateTransakcija" method="post" class="d-flex flex-column gap-3">
+
+    <input type="hidden" name="page" value="@Model.PagingInfo.CurrentPage" />
+    <input type="hidden" name="sort" value="@Model.PagingInfo.Sort" />
+    <input type="hidden" name="ascending" value="@Model.PagingInfo.Ascending.ToString()" />
+    <input type="hidden" name="id" value="@Model.Transakcija.IdTrans" />
+    <input type="hidden" name="redirect" value="@Model.Redirect"/>
+
+    <span>
+        <label class="fw-bold text-start" for="model">Model: </label>
+        <input type="text" class="form-control" name="model" placeholder="HR99" value="@Model.Transakcija.Model">
+    </span>
+
+    <span>
+        <label class="fw-bold text-start" for="iznos">Iznos: </label>
+        <input type="number" step="0.01" class="form-control" name="iznos" placeholder="0" value="@Model.Transakcija.Iznos" required>
+    </span>
+
+    <span>
+        <label class="fw-bold text-start" for="opis">Opis: </label>
+        <textarea type="text" class="form-control" name="opis" placeholder="Opis transakcije" value="@Model.Transakcija.Opis"></textarea>
+    </span>
+
+    <span>
+        <label class="fw-bold text-start" for="pozivNaBr">Poziv na broj: </label>
+        <input type="text" class="form-control" name="pozivNaBr" placeholder="00000000" value="@Model.Transakcija.PozivNaBr">
+    </span>
+
+    <span class="mb-3">
+        <label class="align-self-start fw-bold" for="brKartice">Broj kartice: </label>
+        <input type="number" class="form-control" name="brKartice" list="kartice" placeholder="1000000" value="@Model.Transakcija.BrKartice" required />
+        <datalist id="kartice">
+            @foreach (var kartica in Model.Kartice)
+            {
+                <option value="@kartica.BrKartice">
+                    @kartica.BrKartice
+                </option>
+            }
+        </datalist>
+    </span>
+
+    <span>
+        <label class="align-self-start fw-bold" for="idVrste">Vrsta: </label>
+        <select name="idVrste" class="form-select" aria-label="Default select example">
+            @foreach (var vrsta in Model.Vrste)
+            {
+                if(vrsta.IdVrste == Model.Transakcija.IdVrste)
+                {
+                    <option value="@vrsta.IdVrste" selected="selected">
+                        @vrsta.ImeVrste
+                    </option>
+                }
+                else
+                {
+                    <option value="@vrsta.IdVrste">
+                        @vrsta.ImeVrste
+                    </option>
+                }
+                    
+            }
+        </select>
+    </span>
+
+    <span>
+        <label class="fw-bold text-start" for="datum">Datum: </label>
+        <input type="datetime-local" class="form-control" name="datum" value="@Model.Transakcija.Datum?.ToString("yyyy-MM-ddTHH:mm")">
+    </span>
+    <div class="col-12 d-flex justify-content-center">
+        <button style="width:200px" type="submit" class="btn btn-primary w-10">Ažuriraj</button>
+    </div>
+
+</form>

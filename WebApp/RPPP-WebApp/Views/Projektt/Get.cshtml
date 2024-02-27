@@ -1,0 +1,30 @@
+﻿@model ProjektiiViewModel
+
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-center">@Model.ImeProjekta</td>
+    <td class="text-center">@Model.Kratica</td>
+    <td class="text-center">@Model.Sazetak</td>
+    <td class="text-center">@Model.DatumPoc</td>
+    <td class="text-center">@Model.DatumZav</td>
+    <td class="text-center">@Model.BrKartice</td>
+    <td>
+        <a class="btn btn-sm"
+           hx-get="@Url.Action(nameof(ProjekttController.Edit), new { id = Model.IdProjekta })"
+           title="Ažuriraj"><i class="bi bi-arrow-clockwise"></i></a>
+    </td>
+    <td>
+        <button class="btn btn-sm btn-danger delete"
+                hx-confirm="Obrisati projekt?"
+                hx-delete="@Url.Action(nameof(ProjekttController.Delete), new { id = Model.IdProjekta })"
+                title="Obriši">
+            <i class="bi bi-trash"></i>
+        </button>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

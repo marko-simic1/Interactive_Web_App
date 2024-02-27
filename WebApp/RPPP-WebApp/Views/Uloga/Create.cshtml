@@ -1,0 +1,36 @@
+﻿@model RPPP_WebApp.ViewModels.UlogaViewModel
+
+@{
+    ViewBag.Title = "Nova uloga";
+}
+
+<h2>Unos nove uloge</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All"></div>
+    <div class="mb-3">
+        <label asp-for="Uloga.ImeUloge" class="form-label">Ime  uloge</label>
+        <input asp-for="Uloga.ImeUloge" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Uloga.ImeUloge" class="text-danger"></span></div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Uloga.Opis" class="form-label"></label>
+        <input asp-for="Uloga.Opis" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Uloga.Opis" class="text-danger"></span></div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Uloga.IdVrste" class="form-label">Vrsta uloge</label>
+        <select class="form-select" asp-for="Uloga.IdVrste" asp-items="@Model.VrsteUloga.Select(v => new SelectListItem(v.ImeVrste, v.IdVrste.ToString()))">
+            <option value="">Odaberite vrstu</option>
+        </select>
+        <div class="form-text"><span asp-validation-for="Uloga.IdVrste" class="text-danger"></span></div>
+    </div>
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Dodaj</button>
+        <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+    </div>
+</form>
+
+@section scripts {
+    <partial name="IncludeValidation" />
+}

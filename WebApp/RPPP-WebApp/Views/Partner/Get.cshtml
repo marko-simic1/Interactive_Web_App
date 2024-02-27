@@ -1,0 +1,30 @@
+﻿@model PartneriViewModel
+
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-center">@Model.Ime</td>
+    <td class="text-center">@Model.Oib</td>
+    <td class="text-center">@Model.Telefon</td>
+    <td class="text-center">@Model.Email</td>
+    <td class="text-center">@Model.Iban</td>
+    <td class="text-center">@Model.Adresa</td>
+    <td>
+        <a class="btn btn-sm"
+           hx-get="@Url.Action(nameof(PartnerController.Edit), new { id = Model.IdPartnera })"
+           title="Ažuriraj"><i class="bi bi-arrow-clockwise"></i></a>
+    </td>
+    <td>
+        <button class="btn btn-sm btn-danger delete"
+                hx-confirm="Obrisati partnera?"
+                hx-delete="@Url.Action(nameof(PartnerController.Delete), new { id = Model.IdPartnera })"
+                title="Obriši">
+            <i class="bi bi-trash"></i>
+        </button>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

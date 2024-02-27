@@ -1,0 +1,173 @@
+﻿@model RPPP_WebApp.ViewModels.ProjekttViewModel
+@{
+    ViewBag.Title = "Projekti";
+}
+
+<h2 class="text-center">Popis projekata</h2>
+
+<h5 class="text-center"><a asp-action="Create">Unos novog projekta</a></h5>
+<br />
+<br />
+
+<pager page-info="@Model.PagingInfo" page-action="Index" page-title="Unesite željenu stranicu"
+       class="float-end">
+</pager>
+
+<table class="table table-sm table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="text-center">
+                <a asp-route-sort="2" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 2 ? !Model.PagingInfo.Ascending : true)">
+                    Ime projekta
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="3" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 3 ? !Model.PagingInfo.Ascending : true)">
+                    Kratica
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="4" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 4 ? !Model.PagingInfo.Ascending : true)">
+                    Sažetak
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="5" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 5 ? !Model.PagingInfo.Ascending : true)">
+                    Datum početka
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="6" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 6 ? !Model.PagingInfo.Ascending : true)">
+                    Datum kraja
+                </a>
+            </th>
+            <th class="text-center">
+                <a asp-route-sort="7" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 7 ? !Model.PagingInfo.Ascending : true)">
+                    Broj kartice
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var projekt in Model.projekti)
+        {
+            <partial name="Get" model="projekt" />
+        }
+    </tbody>
+    @*
+        <tbody>
+            @foreach (var partner in Model.Partneri)
+            {
+                <tr>
+                    <td class="text-center">@partner.IdPartnera</td>
+                    <td class="text-center">@partner.Ime</td>
+                    <td class="text-center">@partner.Oib</td>
+                    <td class="text-center">@partner.Telefon</td>
+                    <td class="text-center">@partner.Email</td>
+                    <td class="text-center">@partner.Iban</td>
+                    <td class="text-center">@partner.Adresa</td>
+                    <td>
+                        <a asp-action="Edit"
+                           asp-route-id="@partner.IdPartnera"
+                           class="btn btn-sm" title="Ažuriraj">
+                            <i class="bi bi-arrow-clockwise">
+
+                            </i>
+                        </a>
+                    </td>
+                    <td>
+                        <form asp-action="Delete" method="post">
+                            <input type="hidden" name="id" value="@partner.IdPartnera" />
+                            <button type="submit" class="btn btn-sm btn-danger delete" title="Obriši">
+                                <i class="bi bi-trash">
+
+                                </i>
+                            </button>
+                        </form>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    *@
+</table>
+
+<button id="generatePdfButton" class="btn btn-primary">Izvezite PDF</button>
+<button id="generateExcelButton" class="btn btn-success">Izvezite Excel</button>
+
+
+<h5 class="text-center">Uvoz podataka korištenjem Excela</h5>
+
+<form method="post" enctype="multipart/form-data" action="@Url.Action("ImportProjektExcel", "Projekt")">
+    <div class="mb-3">
+        <label for="excelFile" class="form-label">Odaberite Excel datoteku:</label>
+        <input type="file" class="form-control" id="excelFile" name="file" accept=".xlsx">
+    </div>
+    <button type="submit" class="btn btn-primary">Uvezi podatke</button>
+</form>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+    <script>
+        var importStatus = '@(TempData["imported"])';
+        if (importStatus === 'True') {
+            alert("Podaci su uspješno uvezeni.");
+        } else if (importStatus === 'False') {
+            var importError = '@(TempData["importError"])';
+            alert("Greška prilikom uvoza podataka: " + importError);
+        }
+        document.getElementById('generatePdfButton').addEventListener('click', function () {
+            // Use AJAX or other methods to call the action that generates the PDF
+            fetch('@Url.Action("ProjektiiPDF", "Report")', {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    console.error('Failed to generate PDF');
+                }
+            }).then(blob => {
+                // Create a download link for the PDF
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'projekti.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        });
+
+        document.getElementById('generateExcelButton').addEventListener('click', function () {
+
+            window.location.href = '@Url.Action("ProjekttExcel", "Report")';
+        });
+    </script>
+}
+
+@if (TempData["used"] != null && (bool)TempData["used"])
+{
+    <script>alert("Projekt se koristi");</script>
+}
+@if (TempData["deleted"] != null && (bool)TempData["deleted"])
+{
+    <script>alert("Projekt je obrisan");</script>
+}
+@if (TempData["updated"] != null && (bool)TempData["updated"])
+{
+    <script>alert("Projekt je ažuriran");</script>
+}
+@if (TempData["created"] != null && (bool)TempData["created"])
+{
+    <script>alert("Projekt je stvoren");</script>
+}
+
+
+
+
+
+

@@ -1,0 +1,177 @@
+﻿@model RPPP_WebApp.ViewModels.OsobaViewModel
+
+<link rel="stylesheet" href="~/css/md.css" />
+
+
+
+<div class="my-3">
+    <a class="btn btn-primary" data-toggle="tooltip" title="Prijašnja osoba" asp-controller="Osoba" asp-action="PrethodnaOsoba" asp-route-crntOsobaId="@Model.Osoba.IdOsoba">
+        <i class="bi bi-arrow-left-circle-fill"></i>
+    </a>
+    <a class="btn btn-primary" data-toggle="tooltip" title="Sljedeća osoba" asp-controller="Osoba" asp-action="SljedecaOsoba" asp-route-crntOsobaId="@Model.Osoba.IdOsoba">
+        <i class="bi bi-arrow-right-circle-fill"></i>
+    </a>
+</div>
+
+<form class="my-3 py-4" style="height: min-content">
+
+    <div class="left d-flex flex-column gap-3">
+
+        <span>
+            <label class="text-start fw-bold">Ime: </label>
+            <input type="text" class="form-control" placeholder="Ime" value="@Model.Osoba.Ime" disabled/>
+        </span>
+        <span>
+            <label class="text-start fw-bold">Prezime: </label>
+            <input type="text" class="form-control" placeholder="Prezime" value="@Model.Osoba.Prezime" disabled />
+        </span>
+        <span>
+            <label class="text-start fw-bold">Email: </label>
+            <input type="text" class="form-control" placeholder="Email" value="@Model.Osoba.Email" disabled />
+        </span>
+        <span>
+            <label class="text-start fw-bold">Telefon: </label>
+            <input type="text" class="form-control" placeholder="Telefon" value="@Model.Osoba.Telefon" disabled />
+        </span>
+        <span>
+            <label class="text-start fw-bold">Iban: </label>
+            <input type="text" class="form-control" placeholder="Iban" value="@Model.Osoba.Iban" disabled />
+        </span>
+
+        <a type="button"  title="Uredi zahtjev" hx-get="@Url.Action(nameof(OsobaController.Edit2), new { id = Model.Osoba.IdOsoba })">
+            <i class="bi bi-pen-fill fs-3"></i>
+        </a>
+        <a type="button" title="Obriši" hx-confirm="Obrisati osobu?" hx-delete="@Url.Action(nameof(OsobaController.Delete2), new { index = Model.Osoba.IdOsoba })">
+            <i class="bi bi-trash-fill fs-3"></i>
+        </a>
+        <h6>Lokalno kad obrišem entitet odvede vas na master detail prvog entiteta u listi, deployano ne radi pa mi nije jasno zašto!</h6>
+        @*
+        <div class="my-4">
+            <button type="button" class="btn text-bg-success" data-toggle="tooltip" title="Uredi zahtjev"
+                    hx-get="@Url.Action(nameof(OsobaController.Edit), new { id = Model.Osoba.IdOsoba })">
+                <i class="bi bi-pen-fill fs-3"></i>
+            </button>
+
+            <button type="button" class="btn text-bg-danger" data-toggle="tooltip" 
+                    hx-confirm="Obrisati mjesto?"
+                    hx-delete="@Url.Action(nameof(OsobaController.Delete2), new { index = Model.Osoba.IdOsoba })"
+                    asp-controller="Osoba" asp-action="SljedecaOsoba" asp-route-crntOsobaId="@Model.Osoba.IdOsoba"
+                    title="Obriši">
+                <i class="bi bi-trash-fill fs-3"></i>
+            </button>
+        </div>
+        
+        
+        <div class="my-4">
+            <button type="button" class="btn text-bg-success" data-toggle="tooltip" title="Uredi zahtjev">
+                <i class="bi bi-pen-fill fs-3"></i>
+            </button>
+            
+            <button type="button" class="btn text-bg-danger" data-toggle="tooltip" title="Odustani">
+                <i class="bi bi-trash-fill fs-3"></i>
+            </button>
+        </div>
+        *@
+    </div>
+
+
+</form>
+<button id="generatePdfButton" class="btn btn-primary">Izvezite PDF</button>
+<button id="generateExcelButton" class="btn btn-success">Izvezite Excel</button>
+
+
+<div class="bold-line"></div>
+
+<h4 class="text-start mt-4">Uloge</h4>
+
+
+ <div class="d-flex justify-content-center">
+    <a class="btn btn-primary mt-4" asp-controller="Uloga" asp-action="Create">
+        <i class="bi bi-plus-lg"></i>
+        Nova Uloga
+    </a>
+</div> 
+<br />
+<br />
+<table class="table table-sm table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="text-center">
+                    Id uloge
+            </th>
+            <th class="text-center">
+                    Ime uloge
+            </th>
+            <th class="text-center">
+                    Opis
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @{
+            var sviRadiNa = Model.Osoba.RadiNa;
+            List<Uloga> uloge = new List<Uloga>();
+            foreach (var radiNa in sviRadiNa)
+            {
+                uloge.Add(radiNa.IdUlogeNavigation);
+            }
+        }
+        @foreach (var uloga in uloge)
+        {
+            <tr>
+                <td class="text-center">@uloga.IdUloge</td>
+                <td class="text-center">@uloga.ImeUloge</td>
+                <td class="text-center">@uloga.Opis</td>
+                
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+
+    <script>
+        document.getElementById('generatePdfButton').addEventListener('click', function () {
+            // Use AJAX or other methods to call the action that generates the PDF
+            var osobaId = @Model.Osoba.IdOsoba; // Get the Id from the model
+            var url = '@Url.Action("OsobePDF2", "Report")' + '?id=' + osobaId;
+
+            fetch(url, {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    console.error('Failed to generate PDF');
+                }
+            }).then(blob => {
+                // Create a download link for the PDF
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'osobe.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        });
+
+        document.getElementById('generateExcelButton').addEventListener('click', function () {
+
+            window.location.href = '@Url.Action("OsobaExcel2", "Report")';
+        });
+    </script>
+}

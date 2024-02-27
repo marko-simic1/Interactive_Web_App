@@ -1,0 +1,51 @@
+﻿@model RPPP_WebApp.ViewModels.ProjekttViewModel
+
+@{
+    ViewBag.Title = "Novi projekt";
+}
+
+
+<h2>Unos novog projekta</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All"></div>
+    <div class="mb-3">
+        <label asp-for="Projekt.ImeProjekta" class="control-label"></label>
+        <input asp-for="Projekt.ImeProjekta" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Projekt.ImeProjekta" class="text-danger"></span></div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Projekt.Kratica" class="form-label"></label>
+        <input asp-for="Projekt.Kratica" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Projekt.Kratica" class="text-danger"></span></div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Projekt.Sazetak" class="form-label"></label>
+        <input asp-for="Projekt.Sazetak" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Projekt.Sazetak" class="text-danger"></span></div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Projekt.DatumPoc" class="form-label"></label>
+        <input asp-for="Projekt.DatumPoc" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Projekt.DatumPoc" class="text-danger"></span></div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Projekt.DatumZav" class="form-label"></label>
+        <input asp-for="Projekt.DatumZav" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Projekt.DatumZav" class="text-danger"></span></div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Projekt.BrKartice" class="form-label"></label>
+        <input asp-for="Projekt.BrKartice" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Projekt.BrKartice" class="text-danger"></span></div>
+    </div>
+    
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Dodaj</button>
+        <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+    </div>
+</form>
+
+@section scripts {
+    <partial name="IncludeValidation" />
+}

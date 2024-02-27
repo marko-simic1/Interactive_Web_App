@@ -1,0 +1,25 @@
+﻿@model VrstePoslovaViewModel
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-center">@Model.IdVrstePosla</td>
+    <td class="text-center">@Model.NazivVrstePosla</td>
+    <td>
+        <a class="btn btn-sm"
+           hx-get="@Url.Action(nameof(VrstaPoslaController.Edit), new { id = Model.IdVrstePosla })"
+           title="Ažuriraj"><i class="bi bi-arrow-clockwise"></i></a>
+    </td>
+    <td>
+        <button class="btn btn-sm btn-danger delete"
+                hx-confirm="Obrisati vrstu posla?"
+                hx-delete="@Url.Action(nameof(VrstaPoslaController.Delete), new { id = Model.IdVrstePosla })"
+                title="Obriši">
+            <i class="bi bi-trash"></i>
+        </button>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

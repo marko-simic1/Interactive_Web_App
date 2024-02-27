@@ -1,0 +1,68 @@
+﻿@model RPPP_WebApp.ViewModels.OsobaViewModel
+
+@{
+    ViewBag.Title = "Nova osoba";
+}
+
+<h2>Unos nove osobe</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All"></div>
+    
+
+    <div class="mb-3">
+        <label asp-for="Osoba.Ime" class="form-label"></label>
+        <input asp-for="Osoba.Ime" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Osoba.Ime" class="text-danger"></span></div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Osoba.Prezime" class="form-label"></label>
+        <input asp-for="Osoba.Prezime" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Osoba.Prezime" class="text-danger"></span></div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Osoba.Email" class="form-label"></label>
+        <input asp-for="Osoba.Email" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Osoba.Email" class="text-danger"></span></div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Osoba.Telefon" class="form-label"></label>
+        <input asp-for="Osoba.Telefon" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Osoba.Telefon" class="text-danger"></span></div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Osoba.Iban" class="form-label"></label>
+        <input asp-for="Osoba.Iban" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Osoba.Iban" class="text-danger"></span></div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Osoba.IdPartnera" class="form-label">Partner</label>
+        <select class="form-select" asp-for="Osoba.IdPartnera" asp-items="@Model.partner.Select(v => new SelectListItem(v.Ime, v.IdPartnera.ToString()))">
+            <option value="null">Nema Partnera</option>
+            <option value="">Odaberite vrstu</option>
+        </select>
+        <div class="form-text"><span asp-validation-for="Osoba.IdPartnera" class="text-danger"></span></div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Uloga</label>
+        <select class="form-select" asp-items="@Model.uloga.Select(v => new SelectListItem(v.ImeUloge, v.IdUloge.ToString()))">
+            <option value="null">Nema Ulogu</option>
+            <option value="">Odaberite vrstu</option>
+        </select>
+        <div class="form-text"><span class="text-danger"></span></div>
+    </div>
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Dodaj</button>
+        <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+    </div>
+    <br />
+    <br />
+    <br />
+</form>
+
+@section scripts {
+    <partial name="IncludeValidation" />
+
+
+}

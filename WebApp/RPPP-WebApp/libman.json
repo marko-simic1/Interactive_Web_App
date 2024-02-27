@@ -1,0 +1,40 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "jquery@3.6.1",
+      "destination": "wwwroot/lib/jquery"
+    },
+    {
+      "library": "jquery-validate@1.19.5",
+      "destination": "wwwroot/lib/jquery-validate/"
+    },
+        {
+            "library": "jqueryui@1.12.1",
+            "destination": "wwwroot/lib/jqueryui/"
+        },
+        {
+            "provider": "unpkg",
+            "library": "jtable@2.6.0",
+            "destination": "wwwroot/lib/jtable/"
+        },
+    {
+      "library": "jquery-validation-unobtrusive@3.2.12",
+      "destination": "wwwroot/lib/jquery-validation-unobtrusive/"
+    },
+    {
+      "library": "bootstrap@5.2.2",
+      "destination": "wwwroot/lib/bootstrap/"
+    },
+    {
+        "library": "bootstrap-icons@1.11.2",
+        "destination": "wwwroot/lib/bootstrap-icons/"
+    },
+    {
+        "library": "htmx@1.8.4",
+        "destination": "wwwroot/lib/htmx/"
+    }
+  ]
+
+}

@@ -1,0 +1,48 @@
+﻿@model RPPP_WebApp.Models.Osoba
+
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-start">
+        <input asp-for="Ime" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="Prezime" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="IdOsoba" class="form-control" disabled />
+    </td>
+    <td class="text-start">
+        <input asp-for="Telefon" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="Email" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="Iban" class="form-control" />
+    </td>
+    <td>
+        <input type="hidden" asp-for="IdOsoba" />
+        <button class="btn btn-sm cancel" hx-include="closest tr"
+                hx-post="@Url.Action(nameof(OsobaaController.Edit), new { id = Model.IdOsoba })"                
+                title="Spremi">
+            Spremi
+        </button>
+    </td>
+    <td>
+        <button class="btn btn-sm cancel"
+                hx-get="@Url.Action(nameof(OsobaaController.Get), new { id = Model.IdOsoba })"
+                title="Odustani">
+
+            Odustani
+        </button>
+    </td>
+    <td>
+        <div asp-validation-summary="All"></div>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

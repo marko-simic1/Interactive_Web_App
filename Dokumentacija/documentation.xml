@@ -1,0 +1,3189 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RPPP-WebApp</name>
+    </assembly>
+    <members>
+        <member name="T:RPPP_WebApp.Controllers.DokumentacijaController">
+            <summary>
+            Controller za obavljanje operacija nad dokumentacijom i za prikaz Razor View-a vezanih uz dokumente.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.DokumentacijaController.#ctor(RPPP_WebApp.Models.ProjektDbContext,Microsoft.Extensions.Options.IOptionsSnapshot{RPPP_WebApp.AppSettings},Microsoft.Extensions.Logging.ILogger{RPPP_WebApp.Controllers.DokumentacijaController})">
+            <summary>
+            Konstruktor razreda DokumentacijaController.
+            Prima dependency injection objekte potrebne za rad kontrolera.
+            </summary>
+            <param name="ctx">Dependency injected databse object. Služi za obavljanje operacija nad bazom.</param>
+            <param name="options">ASP.NET Core's ugrađeni dependency injection i služi za ubacivanje konfiguraicija u kontroler.</param>
+            <param name="logger">Dependency injected Logger object. SLuži za logiranje infromacija na konzolu koje služe programeru za pomoć.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.DokumentacijaController.Index(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje zahtjev za prikazom svih dokumentacija u bazi određenim redosljedom i straničenjem.
+            </summary>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+            <returns>Razor view sa svim podacima.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.DokumentacijaController.Create">
+            <summary>
+            End point koji vraća formu za kreiranje dokumentacije.
+            </summary>
+            <returns>Vraća prikaz konfiguracije za stvaranje dokumentacije. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.DokumentacijaController.Create(RPPP_WebApp.Models.Dokumentacija)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem nove dokumentacije.
+            </summary>
+            <param name="vrDok">ViewModel u koji unosimo dokumentaciju.</param>
+            <returns>Redirect na početnu stranicu dokumentacije. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.DokumentacijaController.Get(System.Int32)">
+            <summary>
+            End point koji vraća sve sadržaje vezano uz dokumentaciju.
+            </summary>
+            <param name="id">Id dokumentacije koji se traži.</param>
+            <returns>vraća prikaz sadržaja dokumentacije. </returns>
+            <response code="404">Not found ukoliko ne postoji dokumentacija s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.DokumentacijaController.PrepareDropDownLists">
+            <summary>
+            Metoda za pripremu padajućih lista
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.DokumentacijaController.Delete(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje zahtjev za brisanjem dokumentacije.
+            </summary>
+            <param name="id">Id dokumentacije kojeg želimo ažurirati.</param>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.DokumentacijaController.Edit(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje id za formom za ažuriranje dokumentacije.
+            </summary>
+            <param name="id">Id dokumentacije kojeg želimo ažurirati.</param>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+            <returns>View s formom za ažuriranje i popunjenim podacima dokumentacije.</returns>
+            <response code="404">Not found ukoliko ne postoji dokumentacija s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.DokumentacijaController.Editing(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje zahtjev za ažuriranje dokumentacije.
+            </summary>
+            <param name="id">Id dokumentacije koja se ažurira.</param>
+            <returns>Redirect na istu stranicu. </returns>
+            <response code="404">Not found ukoliko ne postoji dokumentacija s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.DokumentacijaController.ImportPartnerExcel(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem vrste uloge putem excela.
+            </summary>
+            <param name="file">Datoteka koju pregledavamo.</param>
+            <returns>Novu datoteku koja označava dodane stavke. </returns>
+            <response code="500">Prilikom greške pri upisivanju u bazu.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.JTable.JTableController`3.GetAll(RPPP_WebApp.Models.LoadParams,System.String)">
+            <summary>
+            Wrapper za učitavanje podataka koristeći jTable 
+            </summary>
+            <param name="loadParams"></param>
+            <param name="search"></param>
+            <returns></returns>
+        </member>
+        <member name="T:RPPP_WebApp.Controllers.JTable.LookupController">
+            <summary>
+            Lookup controller prilagođen za jTable
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.Controllers.JZadatakController">
+            <summary>
+            Web API servis za rad s mjestima
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.JZadatakController.Count(System.String)">
+            <summary>
+            Vraća broj svih mjesta filtriran prema nazivu mjesta 
+            </summary>
+            <param name="filter">Opcionalni filter za naziv mjesta</param>
+            <returns></returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.JZadatakController.GetAll(RPPP_WebApp.Models.LoadParams)">
+            <summary>
+            Dohvat mjesta (opcionalno filtrirano po nazivu mjesta).
+            Broj mjesta, poredak, početna pozicija određeni s loadParams.
+            </summary>
+            <param name="loadParams">Postavke za straničenje i filter</param>
+            <returns></returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.JZadatakController.Get(System.Int32)">
+            <summary>
+            Vraća grad čiji je IdMjesta jednak vrijednosti parametra id
+            </summary>
+            <param name="id">IdMjesta</param>
+            <returns></returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.JZadatakController.Delete(System.Int32)">
+            <summary>
+            Brisanje mjesta određenog s id
+            </summary>
+            <param name="id">Vrijednost primarnog ključa (Id mjesta)</param>
+            <returns></returns>
+            <response code="204">Ako je mjesto uspješno obrisano</response>
+            <response code="404">Ako mjesto s poslanim id-om ne postoji</response>      
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.JZadatakController.Update(System.Int32,RPPP_WebApp.ViewModels.JZadatakViewModel)">
+            <summary>
+            Ažurira mjesto
+            </summary>
+            <param name="id">parametar čija vrijednost jednoznačno identificira mjesto</param>
+            <param name="model">Podaci o mjestu. IdMjesta mora se podudarati s parametrom id</param>
+            <returns></returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.JZadatakController.Create(RPPP_WebApp.ViewModels.JZadatakViewModel)">
+            <summary>
+            Stvara novo mjesto opisom poslanim modelom
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="T:RPPP_WebApp.Controllers.KarticaController">
+            <summary>
+            Kontroler za upravljanje operacijama vezanim uz entitet kartice.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.KarticaController.#ctor(RPPP_WebApp.Models.ProjektDbContext,Microsoft.Extensions.Options.IOptionsSnapshot{RPPP_WebApp.AppSettings},Microsoft.Extensions.Logging.ILogger{RPPP_WebApp.Controllers.KarticaController})">
+            <summary>
+            Konstruktor za KarticaController.
+            </summary>
+            <param name="ctx">Objekt za pristup bazi podataka.</param>
+            <param name="options">Postavke aplikacije.</param>
+            <param name="logger">Logger za zapisivanje događaja.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.KarticaController.Kartice(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Prikazuje popis kartica s opcijama za straničenje i sortiranje.
+            </summary>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>View s tablicom kartica.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.KarticaController.FormUpdateKartica(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Prikazuje stranicu za ažuriranje kartice.
+            </summary>
+            <param name="id">Broj kartice</param>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>View s formom za ažuriranje kartice</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.KarticaController.UpdateKartica(System.Int32,System.Int32,System.Decimal,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            POST metoda za ažuriranje kartice.
+            </summary>
+            <param name="projekt">Atribut projekt entiteta kartice.</param>
+            <param name="brKartice">Broj kartice.</param>
+            <param name="stanje">Atribut stanje entiteta kartice.</param>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>Vraća redirekt akciju ili HTTP status code.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.KarticaController.FormCreateKartica(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Prikazuje stranicu za kreiranje kartice.
+            </summary>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>View s formom za kreiranje nove kartice.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.KarticaController.CreateKartica(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            POST metoda za kreiranje nove kartice.
+            </summary>
+            <param name="projekt">Atribut projekt entiteta kartice.</param>
+            <param name="brKartice">Broj kartice.</param>
+            <param name="stanje">Atribut stanje entiteta kartice.</param>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>Vraća redirekt ili HTTP status kod.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.KarticaController.DeleteKartica(System.Int32)">
+            <summary>
+            POST metoda za brisanje kartice.
+            </summary>
+            <param name="brKartice">Broj kartice.</param>
+            <returns>Vraća redirekt ili HTTP status kod.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.KarticaController.KarticeMD(System.Int32)">
+            <summary>
+            Prikaz Master-detail stranice za karticu.
+            </summary>
+            <param name="brKartice">Broj kartice.</param>
+            <returns>View s prikazom master-detail forme.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.KarticaController.SljedecaKartica(System.Int32)">
+            <summary>
+            Funkcija za prijlaz na slijedeću karticu u MD prikazu.
+            </summary>
+            <param name="currentBrKartice">Trenutna kartica.</param>
+            <returns>View sa MD formom slijedeće kartice.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.KarticaController.PrethodnaKartica(System.Int32)">
+            <summary>
+            Funkcija za prijlaz na prethodnu karticu u MD prikazu.
+            </summary>
+            <param name="currentBrKartice">Trenutna kartica.</param>
+            <returns>View sa MD formom prethodne kartice.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.KarticaController.Get(System.Int32)">
+            <summary>
+            Prikaz redka u tablici kartica.
+            </summary>
+            <param name="brKartice">Broj kartice.</param>
+            <returns>Partial view s jednik retkom tablice.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.KarticaController.Edit(System.Int32)">
+            <summary>
+            Prikaz redka za ažuriranje podatka kartice.
+            </summary>
+            <param name="brKartice">Broj kartice.</param>
+            <returns>Partial view retka za ažuriranje kartice.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.KarticaController.Edit(RPPP_WebApp.Models.Kartica)">
+            <summary>
+            POST metoda za ažuriranje kartice unutar retka.
+            </summary>
+            <param name="kartica">Objekt kartice.</param>
+            <returns>Redirekt ako je sve prošlo dobro.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.KarticaController.Delete(System.Int32)">
+            <summary>
+            Funkcija za brisanje kartice.
+            </summary>
+            <param name="brKartice">Broj kartice.</param>
+            <returns>Vraća poruku o izbrisanoj kartici.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.KarticaController.ImportKarticaExcel(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Uvoz kartica kroz excel datoteku.
+            </summary>
+            <param name="file">Excel file.</param>
+            <returns>Redirekt ako je sve prošlo dobro.</returns>
+        </member>
+        <member name="T:RPPP_WebApp.Controllers.OsobaaController">
+            <summary>
+            Kontroler za upravljanje operacijama vezanim uz osobe.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaaController.#ctor(RPPP_WebApp.Models.ProjektDbContext,Microsoft.Extensions.Options.IOptionsSnapshot{RPPP_WebApp.AppSettings},Microsoft.Extensions.Logging.ILogger{RPPP_WebApp.Controllers.OsobaController})">
+            <summary>
+            Konstruktor za OsobaaController.
+            </summary>
+            <param name="ctx">Objekt za pristup bazi podataka.</param>
+            <param name="options">Postavke aplikacije.</param>
+            <param name="logger">Logger za zapisivanje događaja.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaaController.Index(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Prikazuje popis osoba s opcijama za straničenje i sortiranje.
+            </summary>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>Pogled s popisom osoba.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaaController.Get(System.Int32)">
+            <summary>
+            Dohvaća detalje o određenoj osobi.
+            </summary>
+            <param name="id">Identifikator osobe.</param>
+            <returns>Pogled s detaljima o osobi.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaaController.Create">
+            <summary>
+            Prikazuje formu za stvaranje nove osobe.
+            </summary>
+            <returns>Pogled s formom za stvaranje nove osobe.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaaController.Create(RPPP_WebApp.ViewModels.OsobaViewModel)">
+            <summary>
+            Stvara novu osobu na temelju podataka iz obrasca.
+            </summary>
+            <param name="viewModel">Model za novu osobu.</param>
+            <returns>Pogled s rezultatom stvaranja osobe.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaaController.Edit(System.Int32)">
+            <summary>
+            Prikazuje formu za uređivanje postojeće osobe.
+            </summary>
+            <param name="id">Identifikator osobe koja se uređuje.</param>
+            <returns>Pogled s formom za uređivanje osobe.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaaController.Edit(RPPP_WebApp.Models.Osoba)">
+            <summary>
+            Ažurira postojeću osobu na temelju podataka iz obrasca.
+            </summary>
+            <param name="osoba">Osoba s ažuriranim podacima.</param>
+            <returns>Rezultat ažuriranja osobe.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaaController.Delete(System.Int32)">
+            <summary>
+            Briše određenu osobu.
+            </summary>
+            <param name="id">Identifikator osobe koja se briše.</param>
+            <returns>Rezultat brisanja osobe.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaaController.ImportOsobaExcel(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Uvozi podatke o osobama iz Excel datoteke.
+            </summary>
+            <param name="file">Excel datoteka s podacima o osobama.</param>
+            <returns>Rezultat uvoza podataka.</returns>
+        </member>
+        <member name="T:RPPP_WebApp.Controllers.OsobaController">
+            <summary>
+            Controller za obavljanje operacija nad osobama i za prikaz Razor View-a vezanih uz osobe.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaController.#ctor(RPPP_WebApp.Models.ProjektDbContext,Microsoft.Extensions.Options.IOptionsSnapshot{RPPP_WebApp.AppSettings},Microsoft.Extensions.Logging.ILogger{RPPP_WebApp.Controllers.OsobaController})">
+            <summary>
+            Konstruktor razreda OsobaController.
+            Prima dependency injection objekte potrebne za rad kontrolera.
+            </summary>
+            <param name="ctx">Dependency injected databse object. Služi za obavljanje operacija nad bazom.</param>
+            <param name="options">ASP.NET Core's ugrađeni dependency injection i služi za ubacivanje konfiguraicija u kontroler.</param>
+            <param name="logger">Dependency injected Logger object. SLuži za logiranje infromacija na konzolu koje služe programeru za pomoć.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaController.Index(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje zahtjev za prikazom svih osoba u bazi određenim redosljedom i straničenjem.
+            </summary>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+            <returns>Razor view sa svim podacima.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaController.Get(System.Int32)">
+            <summary>
+            End point koji vraća sve sadržaje vezano uz osobu.
+            </summary>
+            <param name="id">Osoba koji se traži.</param>
+            <returns>vraća prikaz sadržaja osobe. </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaController.Create">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem nove osobe.
+            </summary>
+            <returns>Vraća prikaz konfiguracije za stvaranje osobe. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaController.Create(RPPP_WebApp.ViewModels.OsobaViewModel)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem nove osobe.
+            </summary>
+            <param name="viewModel">ViewModel u koji unosimo osobu.</param>
+            <returns>Redirect na početnu stranicu osoba. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaController.Edit(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za formom za ažuriranje osobe.
+            </summary>
+            <param name="id">Id osobe kojeg želimo ažurirati.</param>
+            <returns>View s formom za ažuriranje i popunjenim podacima osobe.</returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaController.Edit(RPPP_WebApp.Models.Osoba)">
+            <summary>
+            End point na koje se šalje zahtjev za ažuriranje osobe.
+            </summary>
+            <param name="osoba">Osoba koja se ažurira.</param>
+            <returns>Redirect na istu stranicu. </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaController.Edit2(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za ažuriranje osobe.
+            </summary>
+            <param name="id"> Id osobe koja se ažurira</param>
+            <returns>Redirect na master detail sljedeće osobe </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaController.Edit2(RPPP_WebApp.Models.Osoba)">
+            <summary>
+            End point na koje se šalje zahtjev za ažuriranje osobe.
+            </summary>
+            <param name="osoba">Osoba koji se ažurira.</param>
+            <returns>Redirect na istu stranicu. </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaController.Delete(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za brisanjem osobe.
+            </summary>
+            <param name="id">Osoba koja se briše.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaController.Delete2(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za brisanjem osobe.
+            </summary>
+            <param name="index">Osoba koji se briše</param>
+            <returns>Redirect na istu stranicue </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaController.ImportOsobaExcel(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem osobe putem excela.
+            </summary>
+            <param name="file">Datoteka koju pregledavamo.</param>
+            <returns>Novu datoteku koja označava dodane stavke. </returns>
+            <response code="500">Prilikom greške pri upisivanju u bazu.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaController.index2(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za prikaz master detail osobe.
+            </summary>
+            <param name="id">Osoba koja se prikazuje.</param>
+            <returns>Redirect na master detail. </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+            <response code="500">Prilikom greške pri upisivanju u bazu.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaController.SljedecaOsoba(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za prikazavinjem master detail sljedeće osobe osobe.
+            </summary>
+            <param name="crntOsobaId">Osoba koja se trenutno prikatzuje</param>
+            <returns>Redirect na master detail osobe </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+            <response code="500">Prilikom greške pri upisivanju u bazu.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.OsobaController.PrethodnaOsoba(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za prikazavinjem master detail prethodne osobe osobe.
+            </summary>
+            <param name="crntOsobaId">Osoba koja se trenutno prikatzuje</param>
+            <returns>Redirect na master detail osobe </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+            <response code="500">Prilikom greške pri upisivanju u bazu.</response>
+        </member>
+        <member name="T:RPPP_WebApp.Controllers.PartnerController">
+            <summary>
+            Kontroler za upravljanje partnerima.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PartnerController.#ctor(RPPP_WebApp.Models.ProjektDbContext,Microsoft.Extensions.Options.IOptionsSnapshot{RPPP_WebApp.AppSettings},Microsoft.Extensions.Logging.ILogger{RPPP_WebApp.Controllers.PartnerController})">
+            <summary>
+            Konstruktor PartnerController-a.
+            </summary>
+            <param name="ctx">Kontekst baze podataka.</param>
+            <param name="options">Postavke aplikacije.</param>
+            <param name="logger">Logger za zabilježavanje informacija.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PartnerController.Index(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Prikazuje popis partnera.
+            </summary>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Vrsta sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>View s popisom partnera.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PartnerController.Get(System.Int32)">
+            <summary>
+            Dohvaća informacije o određenom partneru.
+            </summary>
+            <param name="id">Identifikator partnera.</param>
+            <returns>PartialView s informacijama o partneru ili NotFound ako partner ne postoji.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PartnerController.Create">
+            <summary>
+            Prikazuje formu za stvaranje novog partnera.
+            </summary>
+            <returns>View za stvaranje novog partnera.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PartnerController.Create(RPPP_WebApp.ViewModels.PartnerViewModel)">
+            <summary>
+            Stvara novog partnera na temelju podataka iz forme.
+            </summary>
+            <param name="viewModel">ViewModel s podacima o partneru.</param>
+            <returns>Redirect na Index ili View ako podaci nisu ispravni.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PartnerController.Edit(System.Int32)">
+            <summary>
+            Prikazuje formu za uređivanje partnera.
+            </summary>
+            <param name="id">Identifikator partnera.</param>
+            <returns>PartialView s podacima o partneru ili NotFound ako partner ne postoji.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PartnerController.Edit(RPPP_WebApp.Models.Partner)">
+            <summary>
+            Ažurira podatke o partneru na temelju podataka iz forme.
+            </summary>
+            <param name="partner">Podaci o partneru za ažuriranje.</param>
+            <returns>PartialView s podacima o partneru ili BadRequest ako podaci nisu ispravni.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PartnerController.Delete(System.Int32)">
+            <summary>
+            Briše partnera na temelju identifikatora.
+            </summary>
+            <param name="id">Identifikator partnera za brisanje.</param>
+            <returns>ActionResult koji uključuje informacije o rezultatu brisanja.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PartnerController.ImportPartnerExcel(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Uvozi podatke o partnerima iz Excel datoteke.
+            </summary>
+            <param name="file">Excel datoteka s podacima o partnerima.</param>
+            <returns>ActionResult s rezultatom uvoza podataka.</returns>
+        </member>
+        <member name="T:RPPP_WebApp.Controllers.PosaoController">
+            <summary>
+            Controller za obavljanje operacija nad poslovima i za prikaz Razor View-a vezanih uz poslove.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PosaoController.#ctor(RPPP_WebApp.Models.ProjektDbContext,Microsoft.Extensions.Options.IOptionsSnapshot{RPPP_WebApp.AppSettings},Microsoft.Extensions.Logging.ILogger{RPPP_WebApp.Controllers.PosaoController})">
+            <summary>
+            Konstruktor razreda PosaoController.
+            Prima dependency injection objekte potrebne za rad kontrolera.
+            </summary>
+            <param name="ctx">Dependency injected databse object. Služi za obavljanje operacija nad bazom.</param>
+            <param name="options">ASP.NET Core's ugrađeni dependency injection i služi za ubacivanje konfiguraicija u kontroler.</param>
+            <param name="logger">Dependency injected Logger object. SLuži za logiranje infromacija na konzolu koje služe programeru za pomoć.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PosaoController.Index(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje zahtjev za prikazom svih poslova u bazi određenim redosljedom i straničenjem.
+            </summary>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+            <returns>Razor view sa svim podacima.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PosaoController.Get(System.Int32)">
+            <summary>
+            End point koji vraća sve sadržaje vezano uz posao.
+            </summary>
+            <param name="id">Posao koji se traži.</param>
+            <returns>vraća prikaz sadržaja poslova. </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PosaoController.Create">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem novog posla.
+            </summary>
+            <returns>Vraća prikaz konfiguracije za stvaranje posla. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PosaoController.Create(RPPP_WebApp.ViewModels.PosaoViewModel)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem novog posla.
+            </summary>
+            <param name="viewModel">ViewModel u koji unosimo posao.</param>
+            <returns>Redirect na početnu stranicu poslova. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PosaoController.Edit(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za formom za ažuriranje posla.
+            </summary>
+            <param name="id">Id posla kojeg želimo ažurirati.</param>
+            <returns>View s formom za ažuriranje i popunjenim podacima posla.</returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PosaoController.Edit(RPPP_WebApp.Models.Posao)">
+            <summary>
+            End point na koje se šalje zahtjev za ažuriranje posla.
+            </summary>
+            <param name="posao">Posao koji se ažurira.</param>
+            <returns>Redirect na istu stranicu. </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PosaoController.Edit2(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za ažuriranje posla.
+            </summary>
+            <param name="id"> Id posla koja se ažurira</param>
+            <returns>Redirect na master detail sljedećeg posla </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PosaoController.Edit2(RPPP_WebApp.Models.Posao)">
+            <summary>
+            End point na koje se šalje zahtjev za ažuriranje posla.
+            </summary>
+            <param name="posao">Posao koji se ažurira.</param>
+            <returns>Redirect na istu stranicu. </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PosaoController.Delete(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za brisanjem posla.
+            </summary>
+            <param name="id">Posao koja se briše.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PosaoController.Delete2(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za brisanjem osobe.
+            </summary>
+            <param name="index">Posao koji se briše</param>
+            <returns>Redirect na istu stranicue </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PosaoController.ImportPosaoExcel(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem posla putem excela.
+            </summary>
+            <param name="file">Datoteka koju pregledavamo.</param>
+            <returns>Novu datoteku koja označava dodane stavke. </returns>
+            <response code="500">Prilikom greške pri upisivanju u bazu.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PosaoController.Index2(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za prikaz master detail posla.
+            </summary>
+            <param name="id">Posao koja se prikazuje.</param>
+            <returns>Redirect na master detail. </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+            <response code="500">Prilikom greške pri upisivanju u bazu.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PosaoController.SljedeciPosao(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za prikazavinjem master detail sljedećeg posla.
+            </summary>
+            <param name="crntPosaoId">Posoa koja se trenutno prikazuje</param>
+            <returns>Redirect na master detail posla </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+            <response code="500">Prilikom greške pri upisivanju u bazu.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.PosaoController.PrethodniPosao(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za prikazavinjem master detail prethodnog posla.
+            </summary>
+            <param name="crntPosaoId">Posao koja se trenutno prikatzuje</param>
+            <returns>Redirect na master detail posla </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+            <response code="500">Prilikom greške pri upisivanju u bazu.</response>
+        </member>
+        <member name="T:RPPP_WebApp.Controllers.ProjektController">
+            <summary>
+            Controller za obavljanje operacija nad projektima i za prikaz Razor View-a vezanih uz dokumente.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.#ctor(RPPP_WebApp.Models.ProjektDbContext,Microsoft.Extensions.Options.IOptionsSnapshot{RPPP_WebApp.AppSettings},Microsoft.Extensions.Logging.ILogger{RPPP_WebApp.Controllers.ProjektController})">
+            <summary>
+            Konstruktor razreda ProjektController.
+            Prima dependency injection objekte potrebne za rad kontrolera.
+            </summary>
+            <param name="ctx">Dependency injected databse object. Služi za obavljanje operacija nad bazom.</param>
+            <param name="options">ASP.NET Core's ugrađeni dependency injection i služi za ubacivanje konfiguraicija u kontroler.</param>
+            <param name="logger">Dependency injected Logger object. SLuži za logiranje infromacija na konzolu koje služe programeru za pomoć.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.Index(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje zahtjev za prikazom svih projekata u bazi određenim redosljedom i straničenjem.
+            </summary>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+            <returns>Razor view sa svim podacima.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.Create">
+            <summary>
+            End point koji vraća formu za kreiranje projekta.
+            </summary>
+            <returns>Vraća prikaz konfiguracije za stvaranje projekta. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.Create(RPPP_WebApp.Models.Projekt)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem novog projekta.
+            </summary>
+            <param name="projekt">ViewModel u koji unosimo projekt.</param>
+            <returns>Redirect na početnu stranicu projekta. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.Get(System.Int32)">
+            <summary>
+            End point koji vraća sve sadržaje vezano uz projekt.
+            </summary>
+            <param name="id">Id projekta koji se traži.</param>
+            <returns>vraća prikaz sadržaja projekta. </returns>
+            <response code="404">Not found ukoliko ne postoji projekt s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.PrepareDropDownLists">
+            <summary>
+            Metoda za pripremu padajućih lista
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.Delete(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje zahtjev za brisanjem projekta.
+            </summary>
+            <param name="id">Id projekta kojeg želimo ažurirati.</param>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.Delete2(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za brisanjem projekta u MD prikazu.
+            </summary>
+            <param name="id">Id projekta kojeg želimo ažurirati.</param>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.Edit(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje id za formom za ažuriranje projekta.
+            </summary>
+            <param name="id">Id projekta kojeg želimo ažurirati.</param>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+            <returns>View s formom za ažuriranje i popunjenim podacima dokumentacije.</returns>
+            <response code="404">Not found ukoliko ne postoji projekt s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.Edit2(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje id za formom za ažuriranje projekta u MD prikazu.
+            </summary>
+            <param name="id">Id projekta kojeg želimo ažurirati.</param>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+            <returns>View s formom za ažuriranje i popunjenim podacima dokumentacije.</returns>
+            <response code="404">Not found ukoliko ne postoji projekt s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.Editing(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje zahtjev za ažuriranje projekta.
+            </summary>
+            <param name="id">Id projekta koja se ažurira.</param>
+            <returns>Redirect na istu stranicu. </returns>
+            <response code="404">Not found ukoliko ne postoji projekt s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.Editing2(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za ažuriranje projekta u MD prikazu.
+            </summary>
+            <param name="id">Id projekta koja se ažurira.</param>
+            <returns>Redirect na istu stranicu. </returns>
+            <response code="404">Not found ukoliko ne postoji projekt s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.Index2(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za MD prikazom svih projekata i njegovih dokumentacija u bazi određenim redosljedom i straničenjem.
+            </summary>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+            <returns>Razor view sa svim podacima.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.SljedeciProjekt(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za prikazavinjem master detail sljedećeg projekta.
+            </summary>
+            <param name="crntProjektId">Projekt koji se trenutno prikazuje</param>
+            <returns>Redirect na master detail projekta </returns>
+            <resposne code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</resposne>
+            <resposne code="500">Prilikom greške pri upisivanju u bazu.</resposne>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.PrethodniProjekt(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za prikazavinjem master detail prethodnog projekta.
+            </summary>
+            <param name="crntProjektId">Projekt koji se trenutno prikatzuje</param>
+            <returns>Redirect na master detail projekta </returns>
+            <resposne code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</resposne>
+            <resposne code="500">Prilikom greške pri upisivanju u bazu.</resposne>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjektController.ImportPartnerExcel(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem vrste uloge putem excela.
+            </summary>
+            <param name="file">Datoteka koju pregledavamo.</param>
+            <returns>Novu datoteku koja označava dodane stavke. </returns>
+            <response code="500">Prilikom greške pri upisivanju u bazu.</response>
+        </member>
+        <member name="T:RPPP_WebApp.Controllers.ProjekttController">
+            <summary>
+            Controller za obavljanje operacija nad projektima i za prikaz Razor View-a vezanih uz projekte.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjekttController.#ctor(RPPP_WebApp.Models.ProjektDbContext,Microsoft.Extensions.Options.IOptionsSnapshot{RPPP_WebApp.AppSettings},Microsoft.Extensions.Logging.ILogger{RPPP_WebApp.Controllers.PartnerController})">
+            <summary>
+            Konstruktor razreda ProjekttController.
+            Prima dependency injection objekte potrebne za rad kontrolera.
+            </summary>
+            <param name="ctx">Dependency injected databse object. Služi za obavljanje operacija nad bazom.</param>
+            <param name="options">ASP.NET Core's ugrađeni dependency injection i služi za ubacivanje konfiguraicija u kontroler.</param>
+            <param name="logger">Dependency injected Logger object. SLuži za logiranje infromacija na konzolu koje služe programeru za pomoć.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjekttController.Index(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje zahtjev za prikazom svih projekata u bazi određenim redosljedom i straničenjem.
+            </summary>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+            <returns>Razor view sa svim podacima.</returns>
+            
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjekttController.Get(System.Int32)">
+            <summary>
+            End point koji vraća sve sadržaje vezano uz projekte.
+            </summary>
+            <param name="id">Projekt koji se traži.</param>
+            <returns>vraća prikaz sadržaja projekta. </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjekttController.Create">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem novog projekta.
+            </summary>
+            <returns>Vraća prikaz konfiguracije za stvaranje projekta. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjekttController.Create(RPPP_WebApp.ViewModels.ProjekttViewModel)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem novog projekta.
+            </summary>
+            <param name="viewModel">ViewModel u koji unosimo projekt.</param>
+            <returns>Redirect na početnu stranicu projekta. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjekttController.Edit(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za formom za ažuriranje projekta.
+            </summary>
+            <param name="id">Id projekta kojeg želimo ažurirati.</param>
+            <returns>View s formom za ažuriranje i popunjenim podacima projekta.</returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjekttController.Edit(RPPP_WebApp.Models.Projekt)">
+            <summary>
+            End point na koje se šalje zahtjev za ažuriranje projekta.
+            </summary>
+            <param name="projekt">Projekt koja se ažurira.</param>
+            <returns>Redirect na istu stranicu. </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+            
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjekttController.Delete(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za brisanjem projekta.
+            </summary>
+            <param name="id">Projekt koja se briše.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.ProjekttController.ImportProjektExcel(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem projekta putem excela.
+            </summary>
+            <param name="file">Datoteka koju pregledavamo.</param>
+            <returns>Novu datoteku koja označava dodane stavke. </returns>
+            <response code="500">Prilikom greške pri upisivanju u bazu.</response>
+        </member>
+        <member name="T:RPPP_WebApp.Controllers.TransakcijaController">
+            <summary>
+            Kontroler za upravljanje operacijama vezanim uz entitet transakcije.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.#ctor(RPPP_WebApp.Models.ProjektDbContext,Microsoft.Extensions.Options.IOptionsSnapshot{RPPP_WebApp.AppSettings},Microsoft.Extensions.Logging.ILogger{RPPP_WebApp.Controllers.TransakcijaController})">
+            <summary>
+            Konstruktor za TransakcijaController.
+            </summary>
+            <param name="ctx">Objekt za pristup bazi podataka.</param>
+            <param name="options">Postavke aplikacije.</param>
+            <param name="logger">Logger za zapisivanje događaja.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.Transakcije(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Prikazuje popis transakcija s opcijama za straničenje i sortiranje.
+            </summary>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>View s tablicom transakcija.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.FormUpdateTransakcija(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Prikazuje stranicu za ažuriranje transakcije.
+            </summary>
+            <param name="id">Broj kartice</param>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <param name="redirect">Varijable za vraćanje na prethodnu stranicu.</param>
+            <returns>View s formom za ažuriranje kartice.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.UpdateTransakcija(System.Int32,System.Int32,System.Int32,System.String,System.String,System.Decimal,System.DateTime,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            POST metoda za ažuriranje transakcije.
+            </summary>
+            <param name="redirect">Varijable za vraćanje na prethodnu stranicu.</param>
+            <param name="id">Id transakcije.</param>
+            <param name="brKartice">Broj kartice.</param>
+            <param name="model">Model transakcije.</param>
+            <param name="opis">Opis transakcije.</param>
+            <param name="iznos">Iznos transakcije.</param>
+            <param name="datum">Datum transakcije.</param>
+            <param name="pozivNaBr">Poziv na broj transakcije.</param>
+            <param name="idVrste">ID vrste transakcije.</param>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>Redirekt ili HTTP status kod.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.FormCreateTransakcija(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Prikaz forme za kreiranje nove transakcije.
+            </summary>
+            <param name="brKartice">Broj kartice.</param>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>View s prikazom forme za dodavanje nove transakcije.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.CreateTransakcija(System.Int32,System.Int32,System.String,System.String,System.Decimal,System.DateTime,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            POST metoda za kreiranje nove transakcije.
+            </summary>
+            <param name="redirect">Varijable za vraćanje na prethodnu stranicu.</param>
+            <param name="id">Id transakcije.</param>
+            <param name="brKartice">Broj kartice.</param>
+            <param name="model">Model transakcije.</param>
+            <param name="opis">Opis transakcije.</param>
+            <param name="iznos">Iznos transakcije.</param>
+            <param name="datum">Datum transakcije.</param>
+            <param name="pozivNaBr">Poziv na broj transakcije.</param>
+            <param name="idVrste">ID vrste transakcije.</param>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>Redirekt ili HTTP status kod.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.DeleteTransakcija(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Funkcija za brisanje transakcije.
+            </summary>
+            <param name="id">ID transakcije.</param>
+            <param name="redirect">Redirekt na stranicu.</param>
+            <param name="brKartice">Broj kartice.</param>
+            <returns>Vraća redirekt.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.VrsteTransakcija(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Prikaz vrsta transakcije.
+            </summary>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>View s prikazom vrsta transakcije.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.FormCreateVrstaTransakcije(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Prikaz forme za kreiranje nove vrste transakcije.
+            </summary>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>View s formom za kreiranje nove vrste transakcije.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.CreateVrstaTransakcije(System.String,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            POST metoda za kreiranje nove vrste transakcije.
+            </summary>
+            <param name="imeVrste">Ime vrste transakcije.</param>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>Redirekt ako je sve prošlo dobro.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.FormUpdateVrstaTransakcije(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Prikaz forme za ažuriranje vrste transakcije.
+            </summary>
+            <param name="id">ID transakcije.</param>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>View s prikazom forme za ažuriranje vrste transakcije.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.UpdateVrstaTransakcije(System.Int32,System.String,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            POST metoda za ažuriranje vrste transakcije.
+            </summary>
+            <param name="id">ID vrste transakcije.</param>
+            <param name="imeVrste">Ime vrste transakcije.</param>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>Vraća redirekt ako sve prođe dobro.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.DeleteVrstaTransakcije(System.Int32)">
+            <summary>
+            Funkcija za brisanje vrste transakcije.
+            </summary>
+            <param name="id">ID vrste transakcije.</param>
+            <returns>Vraća redirekt ako sve prođe dobro.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.GetTransakcija(System.Int32)">
+            <summary>
+            Prikaz redka u tablici transakcije.
+            </summary>
+            <param name="id">ID transakcije.</param>
+            <returns>Partial view redka transakcije.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.EditTransakcija(System.Int32)">
+            <summary>
+            Prikaz forme za ažuriranje retka u tablici.
+            </summary>
+            <param name="id">ID transakcije.</param>
+            <returns>Partial view retka za ažuriranje transakcije.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.EditTransakcija(RPPP_WebApp.Models.Transakcija)">
+            <summary>
+            Ažuriranje retka u tablici transakcija
+            </summary>
+            <param name="transakcija">Objekt transakcije.</param>
+            <returns>Redirekt ako sve prođe dobro.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.GetVrsta(System.Int32)">
+            <summary>
+            Prikaz retka vrste transakcije u tablici.
+            </summary>
+            <param name="id">ID vrste transakcije.</param>
+            <returns>Partial view retka vrste transkacije.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.EditVrsta(System.Int32)">
+            <summary>
+            Prikaz forme za ažuriranje retka u tablici vrsta transakcije.
+            </summary>
+            <param name="id">ID vrste transakcije.</param>
+            <returns>Partial view forme za ažuriranje retka transakcije.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.EditVrsta(RPPP_WebApp.Models.VrstaTransakcije)">
+            <summary>
+            Metoda za ažuriranje retka vrste transakcije.
+            </summary>
+            <param name="vrsta">Objekt vrste transakcije.</param>
+            <returns>Redirekt ako sve prođe dobro.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.ImportTransakcijaExcel(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Uvoz transakcija kroz excel datoteku.
+            </summary>
+            <param name="file">Excel datoteka.</param>
+            <returns>Redirekt ako sve prođe dobro.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.TransakcijaController.ImportVrstaExcel(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Uvoz vrsta transakcija kroz excel datoteku.
+            </summary>
+            <param name="file">Excel datoteka.</param>
+            <returns>Redirekt ako sve prođe dobro.</returns>
+        </member>
+        <member name="T:RPPP_WebApp.Controllers.UlogaApiController">
+            <summary>
+            Web API kontroler za upravljanje ulogama.
+            </summary>
+        </member>
+        <member name="F:RPPP_WebApp.Controllers.UlogaApiController.orderSelectors">
+            <summary>
+            Rječnik za mapiranje naziva stupaca na odgovarajuće Lambda izraze za sortiranje.
+            </summary>
+        </member>
+        <member name="F:RPPP_WebApp.Controllers.UlogaApiController.projection">
+            <summary>
+            Lambda izraz za projekciju modela uloge na ViewModel uloge.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaApiController.#ctor(RPPP_WebApp.Models.ProjektDbContext)">
+            <summary>
+            Konstruktor UlogaApiController-a.
+            </summary>
+            <param name="ctx">Kontekst baze podataka.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaApiController.Count(System.String)">
+            <summary>
+            Dohvaća broj uloga prema zadanim kriterijima filtra.
+            </summary>
+            <param name="filter">Filter za pretraživanje imena uloga.</param>
+            <returns>Broj uloga koji zadovoljavaju kriterije filtriranja.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaApiController.GetAll(RPPP_WebApp.Models.LoadParams)">
+            <summary>
+            Dohvaća sve uloge prema zadanim parametrima.
+            </summary>
+            <param name="loadParams">Parametri za učitavanje podataka (filtriranje, sortiranje, paginacija).</param>
+            <returns>Lista ViewModela uloga koje zadovoljavaju zadane parametre.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaApiController.Get(System.Int32)">
+            <summary>
+            Dohvaća informacije o određenoj ulozi prema njenom identifikatoru.
+            </summary>
+            <param name="id">Identifikator uloge.</param>
+            <returns>ActionResult koji sadrži ViewModel tražene uloge ili NotFound ako uloga ne postoji.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaApiController.Delete(System.Int32)">
+            <summary>
+            Briše ulogu prema njenom identifikatoru.
+            </summary>
+            <param name="id">Identifikator uloge za brisanje.</param>
+            <returns>ActionResult koji sadrži informacije o rezultatu brisanja.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaApiController.Update(System.Int32,RPPP_WebApp.ViewModels.UlogeViewModel)">
+            <summary>
+            Ažurira podatke o ulozi prema zadanim parametrima.
+            </summary>
+            <param name="id">Identifikator uloge koju treba ažurirati.</param>
+            <param name="model">ViewModel s novim podacima za ulogu.</param>
+            <returns>ActionResult koji sadrži informacije o rezultatu ažuriranja.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaApiController.Create(RPPP_WebApp.ViewModels.UlogeViewModel)">
+            <summary>
+            Dodaje novu ulogu prema zadanim podacima.
+            </summary>
+            <param name="model">ViewModel s podacima za novu ulogu.</param>
+            <returns>ActionResult koji sadrži informacije o rezultatu dodavanja.</returns>
+        </member>
+        <member name="T:RPPP_WebApp.Controllers.UlogaController">
+            <summary>
+            Kontroler za upravljanje operacijama vezanim uz uloge.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaController.#ctor(RPPP_WebApp.Models.ProjektDbContext,Microsoft.Extensions.Options.IOptionsSnapshot{RPPP_WebApp.AppSettings},Microsoft.Extensions.Logging.ILogger{RPPP_WebApp.Controllers.UlogaController})">
+            <summary>
+            Konstruktor za UlogaController.
+            </summary>
+            <param name="ctx">Objekt za pristup bazi podataka.</param>
+            <param name="options">Postavke aplikacije.</param>
+            <param name="logger">Logger za zapisivanje događaja.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaController.Index(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Prikazuje popis uloga s opcijama za straničenje i sortiranje.
+            </summary>
+            <param name="page">Trenutna stranica.</param>
+            <param name="sort">Način sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>Pogled s popisom uloga.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaController.Get(System.Int32)">
+            <summary>
+            Dohvaća detalje o određenoj ulozi.
+            </summary>
+            <param name="id">Identifikator uloge.</param>
+            <returns>Pogled s detaljima o ulozi.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaController.Create">
+            <summary>
+            Prikazuje formu za stvaranje nove uloge.
+            </summary>
+            <returns>Pogled s formom za stvaranje nove uloge.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaController.Create(RPPP_WebApp.ViewModels.UlogaViewModel)">
+            <summary>
+            Stvara novu ulogu na temelju podataka iz obrasca.
+            </summary>
+            <param name="viewModel">Model za novu ulogu.</param>
+            <returns>Pogled s rezultatom stvaranja uloge.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaController.Edit(System.Int32)">
+            <summary>
+            Prikazuje formu za uređivanje postojeće uloge.
+            </summary>
+            <param name="id">Identifikator uloge koja se uređuje.</param>
+            <returns>Pogled s formom za uređivanje uloge.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaController.Edit(RPPP_WebApp.Models.Uloga)">
+            <summary>
+            Ažurira postojeću ulogu na temelju podataka iz obrasca.
+            </summary>
+            <param name="uloga">Uloga s ažuriranim podacima.</param>
+            <returns>Rezultat ažuriranja uloge.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaController.Delete(System.Int32)">
+            <summary>
+            Briše određenu ulogu.
+            </summary>
+            <param name="id">Identifikator uloge koja se briše.</param>
+            <returns>Rezultat brisanja uloge.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.UlogaController.ImportUlogaExcel(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Uvozi podatke o ulogama iz Excel datoteke.
+            </summary>
+            <param name="file">Excel datoteka s podacima o ulogama.</param>
+            <returns>Rezultat uvoza podataka.</returns>
+        </member>
+        <member name="T:RPPP_WebApp.Controllers.VrstaDokumentacijeController">
+            <summary>
+            Controller za obavljanje operacija nad vrstama dokumentacije i za prikaz Razor View-a vezanih uz vrste dokumenta.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaDokumentacijeController.#ctor(RPPP_WebApp.Models.ProjektDbContext,Microsoft.Extensions.Options.IOptionsSnapshot{RPPP_WebApp.AppSettings},Microsoft.Extensions.Logging.ILogger{RPPP_WebApp.Controllers.VrstaProjektaController})">
+            <summary>
+            Konstruktor razreda VrstaDokumentacijeController.
+            Prima dependency injection objekte potrebne za rad kontrolera.
+            </summary>
+            <param name="ctx">Dependency injected databse object. Služi za obavljanje operacija nad bazom.</param>
+            <param name="options">ASP.NET Core's ugrađeni dependency injection i služi za ubacivanje konfiguraicija u kontroler.</param>
+            <param name="logger">Dependency injected Logger object. SLuži za logiranje infromacija na konzolu koje služe programeru za pomoć.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaDokumentacijeController.Index(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje zahtjev za prikazom svih vrsta dokumentacije u bazi određenim redosljedom i straničenjem.
+            </summary>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+            <returns>Razor view sa svim podacima.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaDokumentacijeController.Get(System.Int32)">
+            <summary>
+            End point koji vraća sve sadržaje vezano uz vrstu dokumentacije.
+            </summary>
+            <param name="id">Id vrsta dokumentacije koji se traži.</param>
+            <returns>vraća prikaz sadržaja vrste dokumentacije. </returns>
+            <response code="404">Not found ukoliko ne postoji vrsta dokumentacije s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaDokumentacijeController.Create">
+            <summary>
+            End point koji vraća formu za kreiranje vrste dokumentacije.
+            </summary>
+            <returns>Vraća prikaz konfiguracije za stvaranje vrste dokumentacije. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaDokumentacijeController.Create(RPPP_WebApp.Models.VrstaDok)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem nove vrste dokumentacije.
+            </summary>
+            <param name="vrDok">ViewModel u koji unosimo vrstu dokumentacije.</param>
+            <returns>Redirect na početnu stranicu vrste dokumentacije. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaDokumentacijeController.Delete(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za brisanjem vrste dokumentacije.
+            </summary>
+            <param name="id">Vrsta dokumentacije koja se briše.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaDokumentacijeController.Edit(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje id za formom za ažuriranje vrste dokumentacije.
+            </summary>
+            <param name="id">Id vrste dokumentacije kojeg želimo ažurirati.</param>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+            <returns>View s formom za ažuriranje i popunjenim podacima vrste dokumentacije.</returns>
+            <response code="404">Not found ukoliko ne postoji vrsta dokumentacije s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaDokumentacijeController.Editing(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje zahtjev za ažuriranje vrste dokumentacije.
+            </summary>
+            <param name="id">Id vrsta dokumentacije koja se ažurira.</param>
+            <returns>Redirect na istu stranicu. </returns>
+            <response code="404">Not found ukoliko ne postoji vrsta dokumentacije s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaDokumentacijeController.ImportPartnerExcel(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem vrste uloge putem excela.
+            </summary>
+            <param name="file">Datoteka koju pregledavamo.</param>
+            <returns>Novu datoteku koja označava dodane stavke. </returns>
+            <response code="500">Prilikom greške pri upisivanju u bazu.</response>
+        </member>
+        <member name="T:RPPP_WebApp.Controllers.VrstaPoslaController">
+            <summary>
+            Kontroler za upravljanje vrstom poslova.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaPoslaController.#ctor(RPPP_WebApp.Models.ProjektDbContext,Microsoft.Extensions.Options.IOptionsSnapshot{RPPP_WebApp.AppSettings},Microsoft.Extensions.Logging.ILogger{RPPP_WebApp.Controllers.VrstaUlogeController})">
+            <summary>
+            Konstruktor VrstaPoslaController-a.
+            </summary>
+            <param name="ctx">Kontekst baze podataka.</param>
+            <param name="options">Postavke aplikacije.</param>
+            <param name="logger">Logger za zabilježavanje informacija.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaPoslaController.Index(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Prikazuje popis vrste poslova.
+            </summary>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Vrsta sortiranja.</param>
+            <param name="ascending">Redoslijed sortiranja.</param>
+            <returns>View s popisom vrste poslova.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaPoslaController.Get(System.Int32)">
+            <summary>
+            Dohvaća informacije o određenoj vrsti posla.
+            </summary>
+            <param name="id">Identifikator vrste posla.</param>
+            <returns>PartialView s informacijama o vrsti posla ili NotFound ako vrsta posla ne postoji.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaPoslaController.Create">
+            <summary>
+            Prikazuje formu za stvaranje nove vrste posla.
+            </summary>
+            <returns>View za stvaranje nove vrste posla.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaPoslaController.Create(RPPP_WebApp.Models.VrstaPosla)">
+            <summary>
+            Stvara nove vrsta posla na temelju podataka iz forme.
+            </summary>
+            <param name="vrsta">ViewModel s podacima o vrsti posla.</param>
+            <returns>Redirect na Index ili View ako podaci nisu ispravni.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaPoslaController.Edit(System.Int32)">
+            <summary>
+            Prikazuje formu za uređivanje vrste posla.
+            </summary>
+            <param name="id">Identifikator vrste posla.</param>
+            <returns>PartialView s podacima o vrsti posla ili NotFound ako vrsta posla ne postoji.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaPoslaController.Edit(RPPP_WebApp.Models.VrstaPosla)">
+            <summary>
+            Ažurira podatke o vrsti posla na temelju podataka iz forme.
+            </summary>
+            <param name="vrsta">Podaci o vrsti posla za ažuriranje.</param>
+            <returns>PartialView s podacima o vrsti posla ili BadRequest ako podaci nisu ispravni.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaPoslaController.Delete(System.Int32)">
+            <summary>
+            Briše vrstu posla na temelju identifikatora.
+            </summary>
+            <param name="id">Identifikator vrste posla za brisanje.</param>
+            <returns>ActionResult koji uključuje informacije o rezultatu brisanja.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaPoslaController.ImportVrsteUlogaExcel(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Uvozi podatke o vrsta posla iz Excel datoteke.
+            </summary>
+            <param name="file">Excel datoteka s podacima o vrsti poslova.</param>
+            <returns>ActionResult s rezultatom uvoza podataka.</returns>
+        </member>
+        <member name="T:RPPP_WebApp.Controllers.VrstaProjektaController">
+            <summary>
+            Controller za obavljanje operacija nad vrstama projekta i za prikaz Razor View-a vezanih uz vrste projekata.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaProjektaController.#ctor(RPPP_WebApp.Models.ProjektDbContext,Microsoft.Extensions.Options.IOptionsSnapshot{RPPP_WebApp.AppSettings},Microsoft.Extensions.Logging.ILogger{RPPP_WebApp.Controllers.VrstaProjektaController})">
+            <summary>
+            Konstruktor razreda VrstaProjektaController.
+            Prima dependency injection objekte potrebne za rad kontrolera.
+            </summary>
+            <param name="ctx">Dependency injected databse object. Služi za obavljanje operacija nad bazom.</param>
+            <param name="options">ASP.NET Core's ugrađeni dependency injection i služi za ubacivanje konfiguraicija u kontroler.</param>
+            <param name="logger">Dependency injected Logger object. SLuži za logiranje infromacija na konzolu koje služe programeru za pomoć.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaProjektaController.Index(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje zahtjev za prikazom svih vrsta projekta u bazi određenim redosljedom i straničenjem.
+            </summary>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+            <returns>Razor view sa svim podacima.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaProjektaController.Get(System.Int32)">
+            <summary>
+            End point koji vraća sve sadržaje vezano uz vrstu projekta.
+            </summary>
+            <param name="id">Id vrste projekta koji se traži.</param>
+            <returns>vraća prikaz sadržaja vrste projekta. </returns>
+            <response code="404">Not found ukoliko ne postoji projekta s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaProjektaController.Create">
+            <summary>
+            End point koji vraća formu za kreiranje vrste projekta.
+            </summary>
+            <returns>Vraća prikaz konfiguracije za stvaranje vrste projekta. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaProjektaController.Create(RPPP_WebApp.Models.VrstaProjekta)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem nove vrste projekta.
+            </summary>
+            <param name="vrProj">ViewModel u koji unosimo vrstu projekta.</param>
+            <returns>Redirect na početnu stranicu vrste projekta. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaProjektaController.Delete(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za brisanjem vrste projekta.
+            </summary>
+            <param name="id">Id vrste projekta koja se briše.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaProjektaController.Edit(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje id za formom za ažuriranje vrste projekta.
+            </summary>
+            <param name="id">Id vrste projekta kojeg želimo ažurirati.</param>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+            <returns>View s formom za ažuriranje i popunjenim podacima vrste dokumentacije.</returns>
+            <response code="404">Not found ukoliko ne postoji vrsta projekta s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaProjektaController.Editing(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje zahtjev za ažuriranje vrste projekta.
+            </summary>
+            <param name="id">Id vrste projekta koja se ažurira.</param>
+            <returns>Redirect na istu stranicu. </returns>
+            <response code="404">Not found ukoliko ne postoji vrsta projekta s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaProjektaController.ImportPartnerExcel(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem vrste uloge putem excela.
+            </summary>
+            <param name="file">Datoteka koju pregledavamo.</param>
+            <returns>Novu datoteku koja označava dodane stavke. </returns>
+            <response code="500">Prilikom greške pri upisivanju u bazu.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaUlogeController.#ctor(RPPP_WebApp.Models.ProjektDbContext,Microsoft.Extensions.Options.IOptionsSnapshot{RPPP_WebApp.AppSettings},Microsoft.Extensions.Logging.ILogger{RPPP_WebApp.Controllers.VrstaUlogeController})">
+            <summary>
+            Konstruktor razreda VrstaUlogeController.
+            Prima dependency injection objekte potrebne za rad kontrolera.
+            </summary>
+            <param name="ctx">Dependency injected databse object. Služi za obavljanje operacija nad bazom.</param>
+            <param name="options">ASP.NET Core's ugrađeni dependency injection i služi za ubacivanje konfiguraicija u kontroler.</param>
+            <param name="logger">Dependency injected Logger object. SLuži za logiranje infromacija na konzolu koje služe programeru za pomoć.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaUlogeController.Index(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            End point na koje se šalje zahtjev za prikazom svih vrsta uloga u bazi određenim redosljedom i straničenjem.
+            </summary>
+            <param name="page">Broj stranice.</param>
+            <param name="sort">Broj propertija po kojem se sortira. (Naslov, opis...)</param>
+            <param name="ascending">Uzlazno ili izlazno po propertyu koji sort predstavlja</param>
+            <returns>Razor view sa svim podacima.</returns>
+            
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaUlogeController.Get(System.Int32)">
+            <summary>
+            End point koji vraća sve sadržaje vezano uz vrstu uloge.
+            </summary>
+            <param name="id">Vrsta uloge koji se traži.</param>
+            <returns>vraća prikaz sadržaja vrste uloge. </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaUlogeController.Create">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem nove vrste uloge.
+            </summary>
+            <returns>Vraća prikaz konfiguracije za stvaranje vrste uloge. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaUlogeController.Create(RPPP_WebApp.Models.VrstaUloge)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem nove vrste uloge.
+            </summary>
+            <param name="vrsta">ViewModel u koji unosimo vrstu uloge.</param>
+            <returns>Redirect na početnu stranicu vrste uloge. </returns>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaUlogeController.Edit(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za formom za ažuriranje vrste uloge.
+            </summary>
+            <param name="id">Id vrste uloge kojeg želimo ažurirati.</param>
+            <returns>View s formom za ažuriranje i popunjenim podacima vrste uloge.</returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaUlogeController.Edit(RPPP_WebApp.Models.VrstaUloge)">
+            <summary>
+            End point na koje se šalje zahtjev za ažuriranje vrste uloge.
+            </summary>
+            <param name="vrsta">Vrsta uloge koja se ažurira.</param>
+            <returns>Redirect na istu stranicu. </returns>
+            <response code="404">Not found ukoliko ne postoji zahtjev s tim id-om.</response>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaUlogeController.Delete(System.Int32)">
+            <summary>
+            End point na koje se šalje zahtjev za brisanjem vrste uloge.
+            </summary>
+            <param name="id">Osoba koja se briše.</param>
+        </member>
+        <member name="M:RPPP_WebApp.Controllers.VrstaUlogeController.ImportVrsteUlogaExcel(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            End point na koje se šalje zahtjev za unošenjem vrste uloge putem excela.
+            </summary>
+            <param name="file">Datoteka koju pregledavamo.</param>
+            <returns>Novu datoteku koja označava dodane stavke. </returns>
+            <response code="500">Prilikom greške pri upisivanju u bazu.</response>
+        </member>
+        <member name="T:RPPP_WebApp.Models.Dokumentacija">
+            <summary>
+            Entitet koji predstavlja dokumentaciju.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Dokumentacija.ImeDok">
+            <summary>
+            Ime dokumenta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Dokumentacija.IdDok">
+            <summary>
+            Jedinstveni identifikator dokumenta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Dokumentacija.IdProjekta">
+            <summary>
+            Jedinstveni identifikator projekta povezanog s ovim dokumentom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Dokumentacija.IdVrste">
+            <summary>
+            Jedinstveni identifikator vrste povezane s ovim dokumentom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Dokumentacija.IdProjektaNavigation">
+            <summary>
+            Navigacijsko svojstvo koje predstavlja projekt povezanog s ovim dokumentom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Dokumentacija.IdVrsteNavigation">
+            <summary>
+            Navigacijsko svojstvo koje predstavlja vrstu povezanu s ovim dokumentom.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.Models.Kartica">
+            <summary>
+            Tablica "Kartica" iz baze podataka.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Kartica.Stanje">
+            <summary>
+            Stanje na kartici.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Kartica.BrKartice">
+            <summary>
+            Broj kartice (jedinstven).
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Kartica.Projekt">
+            <summary>
+            Projekt uz kojeg je vezana kartica.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Kartica.Transakcija">
+            <summary>
+            Popis transakcija vezanih uz karticu.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.Models.LoadParams">
+            <summary>
+            Map lazy loading parameters
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.LoadParams.StartIndex">
+            <summary>
+            Starting row index (i.e. how many rows to skip)
+            </summary>    
+        </member>
+        <member name="P:RPPP_WebApp.Models.LoadParams.Rows">
+            <summary>
+            Number of elements to return
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.LoadParams.Sort">
+            <summary>
+            Name of a column. Must be same as in corresponding DTO object, case insensitive
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.LoadParams.Filter">
+            <summary>
+            Global filter parameter
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.Models.Osoba">
+            <summary>
+            Entitet koji predstavlja osobu.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Osoba.Ime">
+            <summary>
+            Ime osobe.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Osoba.IdOsoba">
+            <summary>
+            Jedinstveni identifikator osobe.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Osoba.Email">
+            <summary>
+            E-mail adresa osobe.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Osoba.Telefon">
+            <summary>
+            Telefon osobe.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Osoba.Iban">
+            <summary>
+            IBAN (Međunarodni bankovni račun) osobe.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Osoba.Prezime">
+            <summary>
+            Prezime osobe.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Osoba.IdPartnera">
+            <summary>
+            Jedinstveni identifikator partnera povezanog s ovom osobom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Osoba.IdPartneraNavigation">
+            <summary>
+            Navigacijski svojstvo koje predstavlja partnera povezanog s ovom osobom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Osoba.RadiNa">
+            <summary>
+            Kolekcija radnih mjesta na kojima osoba radi.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Osoba.Zadatak">
+            <summary>
+            Kolekcija zadataka koje osoba izvršava.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Osoba.IdPosla">
+            <summary>
+            Kolekcija poslova povezanih s ovom osobom.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.Models.Partner">
+            <summary>
+            Entitet koji predstavlja partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Partner.IdPartnera">
+            <summary>
+            Jedinstveni identifikator partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Partner.Oib">
+            <summary>
+            OIB (Osobni identifikacijski broj) partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Partner.Email">
+            <summary>
+            E-mail adresa partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Partner.Telefon">
+            <summary>
+            Telefon partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Partner.Iban">
+            <summary>
+            IBAN (Međunarodni bankovni račun) partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Partner.Ime">
+            <summary>
+            Ime partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Partner.Adresa">
+            <summary>
+            Adresa partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Partner.Osoba">
+            <summary>
+            Kolekcija osoba povezanih s ovim partnerom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Partner.IdProjekta">
+            <summary>
+            Kolekcija projekata povezanih s ovim partnerom.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.Models.Posao">
+            <summary>
+            Entitet koji predstavlja posao.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Posao.IdPosla">
+            <summary>
+             Jedinstveni identifikator posla
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Posao.Opis">
+            <summary>
+            Opis posla
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Posao.ImePosla">
+            <summary>
+            Ime posla
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Posao.IdVrste">
+            <summary>
+            Jedinstveni identifikator vrste posla
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Posao.IdVrsteNavigation">
+            <summary>
+            Navigacijski svojstvo koje predstavlja vrstu posla povezanog s ovim poslom
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Posao.IdOsoba">
+            <summary>
+            Kolekcija osoba povezanih s ovim poslom.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.Models.Projekt">
+            <summary>
+            Entitet koji predstavlja projekt.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Projekt.IdProjekta">
+            <summary>
+            Jedinstveni identifikator projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Projekt.Kratica">
+            <summary>
+            Kratica projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Projekt.Sazetak">
+            <summary>
+            Sažetak projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Projekt.ImeProjekta">
+            <summary>
+            Ime projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Projekt.DatumPoc">
+            <summary>
+            Datum početka projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Projekt.DatumZav">
+            <summary>
+            Datum završetka projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Projekt.BrKartice">
+            <summary>
+            Broj kartice projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Projekt.IdVrste">
+            <summary>
+            Jedinstveni identifikator vrste povezane s ovim projektom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Projekt.BrKarticeNavigation">
+            <summary>
+            Navigacijsko svojstvo koje predstavlja broj kartice povezan s ovim projektom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Projekt.Dokumentacija">
+            <summary>
+            Kolekcija dokumentacija povezanih s ovim projektom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Projekt.IdVrsteNavigation">
+            <summary>
+            Navigacijsko svojstvo koje predstavlja vrstu povezanu s ovim projektom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Projekt.RadiNa">
+            <summary>
+            Kolekcija radiNa povezanih s ovim projektom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Projekt.Zahtjev">
+            <summary>
+            Kolekcija zahtjeva povezanih s ovim projektom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Projekt.IdPartnera">
+            <summary>
+            Kolekcija partnera povezanih s ovim projektom.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.Models.Transakcija">
+            <summary>
+            Tablica "transakcija" iz baze podataka.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Transakcija.Model">
+            <summary>
+            Model transakcije.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Transakcija.IdTrans">
+            <summary>
+            ID transakcije.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Transakcija.Opis">
+            <summary>
+            Opis transakcije.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Transakcija.Iznos">
+            <summary>
+            Iznos transakcije.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Transakcija.Datum">
+            <summary>
+            Vrijeme transakcije.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Transakcija.PozivNaBr">
+            <summary>
+            Poziv na broj transakcije
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Transakcija.BrKartice">
+            <summary>
+            Broj kartice
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Transakcija.IdVrste">
+            <summary>
+            ID vrste transakcije
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Transakcija.BrKarticeNavigation">
+            <summary>
+            Objekt kartice uz koju je vezana transakcija
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Transakcija.IdVrsteNavigation">
+            <summary>
+            Objekt vrste transakcije uz koji je vezana transackija
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.Models.Uloga">
+            <summary>
+            Entitet koji predstavlja ulogu.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Uloga.IdUloge">
+            <summary>
+            Jedinstveni identifikator uloge.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Uloga.ImeUloge">
+            <summary>
+            Ime uloge.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Uloga.Opis">
+            <summary>
+            Opis uloge.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Uloga.IdVrste">
+            <summary>
+            Jedinstveni identifikator vrste uloge kojoj pripada ova uloga.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Uloga.IdVrsteNavigation">
+            <summary>
+            Navigacijsko svojstvo koje predstavlja vrstu uloge kojoj pripada ova uloga.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.Uloga.RadiNa">
+            <summary>
+            Kolekcija radnih mjesta na kojima je ova uloga dodijeljena.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.Models.VrstaDok">
+            <summary>
+            Entitet koji predstavlja vrstu dokumentacije.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.VrstaDok.IdVrste">
+            <summary>
+            Jedinstveni identifikator vrste dokumenta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.VrstaDok.ImeVrste">
+            <summary>
+            Ime vrste dokumenta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.VrstaDok.Dokumentacija">
+            <summary>
+            Kolekcija dokumenata povezanih s ovom vrstom dokumenta.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.Models.VrstaPosla">
+            <summary>
+            Entitet koji predstavlja vrstu posla.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.VrstaPosla.IdVrste">
+            <summary>
+            Jedinstveni identifikator vrste posla.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.VrstaPosla.ImeVrste">
+            <summary>
+            Ime vrste posla
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.VrstaPosla.Posao">
+            <summary>
+            Kolekcija poslova kojima je vrsta posla navedeni entitet
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.Models.VrstaProjekta">
+            <summary>
+            Entitet koji predstavlja vrstu projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.VrstaProjekta.IdVrste">
+            <summary>
+            Jedinstveni identifikator vrste projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.VrstaProjekta.ImeVrste">
+            <summary>
+            Ime vrste projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.VrstaProjekta.Projekt">
+            <summary>
+            Kolekcija projekata povezanih s ovom vrstom projekta.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.Models.VrstaTransakcije">
+            <summary>
+            Tablica "vrstaTransakcije" iz baze podataka.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.VrstaTransakcije.ImeVrste">
+            <summary>
+            Ime vrste transakcije.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.VrstaTransakcije.IdVrste">
+            <summary>
+            ID vrste transakcije.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.VrstaTransakcije.Transakcija">
+            <summary>
+            Transakcije koje su vezane uz vrstu transakcije.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.Models.VrstaUloge">
+            <summary>
+            Entitet koji predstavlja vrstu uloge.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.VrstaUloge.IdVrste">
+            <summary>
+            Jedinstveni identifikator vrste uloge.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.VrstaUloge.ImeVrste">
+            <summary>
+            Ime vrste uloge.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.Models.VrstaUloge.Uloga">
+            <summary>
+            Kolekcija uloga koje pripadaju ovoj vrsti uloge.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.TagHelpers.PagerTagHelper">
+            <summary>
+            Tag helper za kreiranje vlastitih poveznica na stranice u rezultatu nekog upravljača
+            Upotrebljava se kao atribut HTML oznake pager koju mijenja u div
+            <example>
+            Primjer upotrebe
+            
+            <pager page-info="@Model.PagingInfo" page-action="Index" page-title="Unesite željenu stranicu" class="float-end">
+            </pager>
+            
+            U datoteku _ViewImports.cshtml potrebno dodati @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers  
+            te u pogled uključiti vlastitu javascript datoteku gotopage.js
+            </example>
+            </summary>  
+        </member>
+        <member name="P:RPPP_WebApp.TagHelpers.PagerTagHelper.PageInfo">
+            <summary>
+            Serijalizirani string koji sadrži informacije o trenutnoj i ukupnom broju stranicu 
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.TagHelpers.PagerTagHelper.PageFilter">
+            <summary>
+            Serijalizirani string kojim se prenose informacije o aktivnom filtriranju podataka
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.TagHelpers.PagerTagHelper.PageAction">
+            <summary>
+            Akcija na koju poveznica treba voditi
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.TagHelpers.PagerTagHelper.PageTitle">
+            <summary>
+            Tekst za tooltip za trenutni broj stranice i unos ciljane stranice
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.TagHelpers.PagerTagHelper.BuildListItemForPage(System.Int32)">
+            <summary>
+            Stvara oznaku za i-tu stranicu koristeći i kao sadržaj poveznice
+            <seealso cref="M:RPPP_WebApp.TagHelpers.PagerTagHelper.BuildListItemForPage(System.Int32,System.String)"/>
+            </summary>
+            <param name="i">broj stranice</param>
+            <returns>TagBuilder s pripremljenom poveznicom</returns>
+        </member>
+        <member name="M:RPPP_WebApp.TagHelpers.PagerTagHelper.BuildListItemForPage(System.Int32,System.String)">
+            <summary>
+             Stvara oznaku za i-tu stranicu koristeći argument text kao sadržaj poveznice
+            </summary>
+            <param name="i">broj stranice</param>
+            <param name="text">tekst poveznice</param>
+            <returns>TagBuilder s pripremljenom poveznicom</returns>
+        </member>
+        <member name="M:RPPP_WebApp.TagHelpers.PagerTagHelper.BuildListItemForCurrentPage(System.Int32)">
+            <summary>
+            Stvara polje za prikaz trenutne stranice i unos željene stranice
+            </summary>
+            <param name="page">Broj trenutne stranice</param>
+            <returns></returns>
+        </member>
+        <member name="T:RPPP_WebApp.Util.Extensions.ExceptionExtensions">
+            <summary>
+            Razred sa proširenjima za iznimke
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.Util.Extensions.ExceptionExtensions.CompleteExceptionMessage(System.Exception)">
+            <summary>
+            Vraća sadržaj poruka cijele hijerarhije neke iznimke. Za predanu iznimku provjerava se postoji li unutarnja iznimka.
+            Ako da, poruka unutanje iznimke dodaje se u rezultat te se dalje provjerava postoji li unutarnja iznimka unutarnje iznimke itd...    
+            </summary>
+            <param name="exc">Iznimka čija se kompletna hijerarhija poruka treba ispisati</param>
+            <returns>String formiran od poruka svih unutarnjih iznimki. Poruka svake iznimmke dodana je u novi redak</returns>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.DokumentacijaViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o dokumentaciji za prikaz i manipulaciju na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.DokumentacijaViewModel.IdDok">
+            <summary>
+            Jedinstveni identifikator dokumenta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.DokumentacijaViewModel.ImeDok">
+            <summary>
+            Ime dokumenta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.DokumentacijaViewModel.IdProjekta">
+            <summary>
+            Jedinstveni identifikator projekta povezanog s ovim dokumentom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.DokumentacijaViewModel.IdVrste">
+            <summary>
+            Jedinstveni identifikator vrste povezane s ovim dokumentom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.DokumentacijaViewModel.imeProjekta">
+            <summary>
+            Ime projekta povezanog s ovim dokumentom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.DokumentacijaViewModel.imeVrste">
+            <summary>
+            Ime vrste dokumenta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.DokumentacijeViewModel.Dokumentacija">
+            <summary>
+            Kolekcija dokumentacija.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.DokumentacijeViewModel.PagingInfo">
+            <summary>
+            Informacije o straničenju (paging).
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.KarticaViewModel">
+            <summary>
+            ViewModel entiteta Kartica
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.KarticaViewModel.#ctor(System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.Kartica})">
+            <summary>
+            Konstruktor
+            </summary>
+            <param name="kartice">Lista kartica</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.KarticaViewModel.#ctor">
+            <summary>
+            Konstruktor bez argumenata
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.KarticaViewModel.#ctor(RPPP_WebApp.Models.Kartica)">
+            <summary>
+            Konstruktor s jednom karticom
+            </summary>
+            <param name="kartica">Objekt kartice</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.KarticaViewModel.#ctor(System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.Projekt})">
+            <summary>
+            Konstruktor s listom projekata
+            </summary>
+            <param name="projekti">List projekata</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.KarticaViewModel.#ctor(RPPP_WebApp.Models.Kartica,System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.Projekt})">
+            <summary>
+            Konstruktor
+            </summary>
+            <param name="kartica">Objekt kartice</param>
+            <param name="projekti">List projekata</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.KarticaViewModel.#ctor(RPPP_WebApp.Models.Kartica,RPPP_WebApp.Models.Projekt,System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.Transakcija})">
+            <summary>
+            Konstruktor
+            </summary>
+            <param name="kartica">Objekt kartice</param>
+            <param name="projekt">Objekt projekta</param>
+            <param name="transakcije">Lista transakcije</param>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.KarticaViewModel.Kartice">
+            <summary>
+            Lista kartica.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.KarticaViewModel.PagingInfo">
+            <summary>
+            Informacije o straničenju (paging).
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.KarticaViewModel.transakcije">
+            <summary>
+            Lista transakcija.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.KarticaViewModel.Kartica">
+            <summary>
+            Objekt kartice.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.KarticaViewModel.Projekti">
+            <summary>
+            Lista projekata.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.KarticaViewModel.Projekt">
+            <summary>
+            Objekt projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.KarticaViewModel.Transakcije">
+            <summary>
+            Lista transakcija.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.KarticaViewModel.kartice">
+            <summary>
+            Lista transakcija.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.KarticeViewModel">
+            <summary>
+            ViewModel entiteta kartica za prikaz u tablici
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.KarticeViewModel.BrKartice">
+            <summary>
+            Broj kartice
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.KarticeViewModel.Stanje">
+            <summary>
+            Stanje kartice
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.KarticeViewModel.Projekt">
+            <summary>
+            Projekt vezan uz karticu
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.OsobaViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o osobama za prikaz i manipulaciju na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.OsobaViewModel.#ctor(System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.Osoba})">
+            <summary>
+            Konstruktor koji prima kolekciju osoba.
+            </summary>
+            <param name="osobe">Kolekcija osoba.</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.OsobaViewModel.#ctor">
+            <summary>
+            Prazan konstruktor za inicijalizaciju.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.OsobaViewModel.osobe">
+            <summary>
+            Kolekcija ViewModela za prikaz podataka o osobama.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.OsobaViewModel.#ctor(RPPP_WebApp.Models.Osoba)">
+            <summary>
+            Konstruktor koji prima pojedinu osobu.
+            </summary>
+            <param name="osoba">Objekt tipa Osoba.</param>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.OsobaViewModel.Osobe">
+            <summary>
+            Kolekcija osoba.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.OsobaViewModel.PagingInfo">
+            <summary>
+            Informacije o straničenju (paging).
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.OsobaViewModel.uloga">
+            <summary>
+            Lista uloga.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.OsobaViewModel.Osoba">
+            <summary>
+            Objekt koji predstavlja osobu.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.OsobaViewModel.partner">
+            <summary>
+            Lista partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.OsobaViewModel.UlogaId">
+            <summary>
+            Identifikator uloge.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.OsobeViewModels">
+            <summary>
+            ViewModel koji sadrži podatke o osobama za prikaz i manipulaciju na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.OsobeViewModels.IdOsoba">
+            <summary>
+            Identifikator osobe.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.OsobeViewModels.Ime">
+            <summary>
+            Ime osobe.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.OsobeViewModels.Prezime">
+            <summary>
+            Prezime osobe.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.OsobeViewModels.Iban">
+            <summary>
+            IBAN (International Bank Account Number) osobe.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.OsobeViewModels.Email">
+            <summary>
+            E-mail adresa osobe.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.OsobeViewModels.Telefon">
+            <summary>
+            Telefon osobe.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.PagingInfo">
+            <summary>
+            Klasa koja predstavlja informacije o straničenju (paging) za prikaz podataka.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PagingInfo.TotalItems">
+            <summary>
+            Ukupan broj stavki.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PagingInfo.ItemsPerPage">
+            <summary>
+            Broj stavki po stranici.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PagingInfo.CurrentPage">
+            <summary>
+            Trenutna stranica.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PagingInfo.Ascending">
+            <summary>
+            Zastava koja označava rastući redoslijed.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PagingInfo.TotalPages">
+            <summary>
+            Ukupan broj stranica.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PagingInfo.Sort">
+            <summary>
+            Vrijednost za sortiranje.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.PartneriViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o partnerima za prikaz na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PartneriViewModel.Oib">
+            <summary>
+            OIB partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PartneriViewModel.Email">
+            <summary>
+            Email partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PartneriViewModel.Telefon">
+            <summary>
+            Telefon partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PartneriViewModel.Iban">
+            <summary>
+            IBAN partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PartneriViewModel.Ime">
+            <summary>
+            Ime partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PartneriViewModel.Adresa">
+            <summary>
+            Adresa partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PartneriViewModel.IdPartnera">
+            <summary>
+            Id partnera.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.PartnerViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o partnerima za prikaz i manipulaciju na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.PartnerViewModel.FilteredPartners(System.String)">
+            <summary>
+            Filtrira partnere prema zadanim kriterijima.
+            </summary>
+            <param name="term">Tekstualni pojam prema kojem se filtriraju partneri.</param>
+            <returns>Enumeracija filtriranih partnera.</returns>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.PartnerViewModel.#ctor(System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.Partner})">
+            <summary>
+            Konstruktor koji inicijalizira ViewModel s partnerima.
+            </summary>
+            <param name="partneri">Enumeracija partnera.</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.PartnerViewModel.#ctor">
+            <summary>
+            Konstruktor bez parametara.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PartnerViewModel.partneri">
+            <summary>
+            Enumeracija ViewModela partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PartnerViewModel.projekti">
+            <summary>
+            Enumeracija projekata.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PartnerViewModel.Partner">
+            <summary>
+            Podaci o partneru.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PartnerViewModel.Partneri">
+            <summary>
+            Enumeracija partnera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PartnerViewModel.PagingInfo">
+            <summary>
+            Informacije o straničenju podataka.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.PosaoViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o poslovima za prikaz i manipulaciju na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.PosaoViewModel.#ctor(System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.Posao})">
+            <summary>
+            Konstruktor koji prima kolekciju poslova.
+            </summary>
+            <param name="poslovi">Kolekcija poslova.</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.PosaoViewModel.#ctor">
+            <summary>
+            Prazan konstruktor za inicijalizaciju.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.PosaoViewModel.#ctor(RPPP_WebApp.Models.Posao)">
+            <summary>
+            Konstruktor koji prima jedan posao
+            </summary>
+            <param name="posao">Posao.</param>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PosaoViewModel.poslovi">
+            <summary>
+            Kolekcija ViewModela za prikaz podataka o poslovima.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PosaoViewModel.Poslovi">
+            <summary>
+            Kolekcija poslova.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PosaoViewModel.PagingInfo">
+            <summary>
+            Informacije o straničenju (paging).
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PosaoViewModel.Osobe">
+            <summary>
+            Kolekcija osoba.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PosaoViewModel.Posao">
+            <summary>
+            Objekt koji predstavlja posao.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PosaoViewModel.VrstaPosla">
+            <summary>
+            Objekt koji predstavlja vrstu posla.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.PosloviViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o osobi za prikaz i manipulaciju na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PosloviViewModel.IdPosla">
+            <summary>
+            Identifikator posla.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PosloviViewModel.Opis">
+            <summary>
+            Opis posla.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PosloviViewModel.ImePosla">
+            <summary>
+            Ime posla.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PosloviViewModel.IdVrste">
+            <summary>
+            Jedinstveni identifikator vrste posla.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.PosloviViewModel.ImeVrste">
+            <summary>
+            Ime vrste posla.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.Projekt2ViewModel.#ctor(System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.Projekt})">
+            <summary>
+            Konstruktor koji prima kolekciju projekata.
+            </summary>
+            <param name="projekti">Kolekcija projekata.</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.Projekt2ViewModel.#ctor">
+            <summary>
+            Prazan konstruktor za inicijalizaciju.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.Projekt2ViewModel.#ctor(RPPP_WebApp.Models.Projekt)">
+            <summary>
+            Konstruktor koji prima projekat.
+            </summary>
+            <param name="projekt">Projekt.</param>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.Projekt2ViewModel.Projekti">
+            <summary>
+            Kolekcija projekata.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.Projekt2ViewModel.PagingInfo">
+            <summary>
+            Informacije o straničenju (paging).
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.Projekt2ViewModel.Dokumentacija">
+            <summary>
+            Lista dokumentacija.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.Projekt2ViewModel.Projekt">
+            <summary>
+            Objekt koji predstavlja projekt.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.ProjektiiViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o projektu za prikaz i manipulaciju na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektiiViewModel.IdProjekta">
+            <summary>
+            Jedinstveni identifikator projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektiiViewModel.ImeProjekta">
+            <summary>
+            Ime projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektiiViewModel.Kratica">
+            <summary>
+            Kratica projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektiiViewModel.Sazetak">
+            <summary>
+            Sažetak projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektiiViewModel.DatumPoc">
+            <summary>
+            Datum početka projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektiiViewModel.DatumZav">
+            <summary>
+            Datum završetka projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektiiViewModel.BrKartice">
+            <summary>
+            Broj kartice projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektiiViewModel.IdVrste">
+            <summary>
+            Jedinstveni identifikator vrste povezane s ovim projektom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektiiViewModel.imeVrste">
+            <summary>
+            Ime vrste projekta.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.ProjektiViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o projektu za prikaz i manipulaciju na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektiViewModel.Projekti">
+            <summary>
+            Kolekcija projekata.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektiViewModel.PagingInfo">
+            <summary>
+            Informacije o straničenju (paging).
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.ProjekttViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o projektima za prikaz i manipulaciju na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.ProjekttViewModel.#ctor(System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.Projekt})">
+            <summary>
+            Konstruktor koji prima kolekciju projekata.
+            </summary>
+            <param name="projekti">Kolekcija projekata.</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.ProjekttViewModel.#ctor">
+            <summary>
+            Prazan konstruktor za inicijalizaciju.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.ProjekttViewModel.FilteredProjekts(System.String)">
+            <summary>
+            Funkcija koja vrača kolekciju projekata koji sadrže ključnu riječ
+            </summary>
+            <param name="term">Riječ po kojoj filtiramo.</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.ProjekttViewModel.#ctor(RPPP_WebApp.Models.Projekt)">
+            <summary>
+            Konstruktor koji prima projekat.
+            </summary>
+            <param name="projekt">Projekt.</param>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjekttViewModel.projekti">
+            <summary>
+            Kolekcija ViewModela za prikaz podataka o projektima.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjekttViewModel.Projekti">
+            <summary>
+            Kolekcija projekata.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjekttViewModel.PagingInfo">
+            <summary>
+            Informacije o straničenju (paging).
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjekttViewModel.Dokumentacija">
+            <summary>
+            Lista dokumentacija.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjekttViewModel.Projekt">
+            <summary>
+            Objekt koji predstavlja projekt.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.ProjektViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o projektu za prikaz i manipulaciju na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektViewModel.IdProjekta">
+            <summary>
+            Jedinstveni identifikator projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektViewModel.ImeProjekta">
+            <summary>
+            Ime projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektViewModel.Kratica">
+            <summary>
+            Kratica projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektViewModel.Sazetak">
+            <summary>
+            Sažetak projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektViewModel.DatumPoc">
+            <summary>
+            Ime projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektViewModel.DatumZav">
+            <summary>
+            Datum početka projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektViewModel.BrKartice">
+            <summary>
+            Broj kartice projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektViewModel.IdVrste">
+            <summary>
+            Jedinstveni identifikator vrste povezane s ovim projektom.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ProjektViewModel.imeVrste">
+            <summary>
+            Ime vrste projekta.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.TransakcijaViewModel">
+            <summary>
+            ViewModel za entitet Transakcije
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.TransakcijaViewModel.#ctor(System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.Transakcija})">
+            <summary>
+            Konstruktor
+            </summary>
+            <param name="transakcije">Lista transakcija</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.TransakcijaViewModel.#ctor">
+            <summary>
+            Konstruktor
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.TransakcijaViewModel.#ctor(RPPP_WebApp.Models.Transakcija)">
+            <summary>
+            Konstruktor
+            </summary>
+            <param name="transakcija">Objekt transakcije</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.TransakcijaViewModel.#ctor(RPPP_WebApp.Models.Transakcija,System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.Kartica},System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.VrstaTransakcije})">
+            <summary>
+            Konstruktor
+            </summary>
+            <param name="transakcija">Objekt transakcije</param>
+            <param name="kartice">Lista kartica</param>
+            <param name="vrste">Lista vrsta transakcija</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.TransakcijaViewModel.#ctor(RPPP_WebApp.Models.Transakcija,System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.Kartica},System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.VrstaTransakcije},System.Int32)">
+            <summary>
+            Konstruktor
+            </summary>
+            <param name="transakcija">Objekt transakcije</param>
+            <param name="kartice">Lista kartica</param>
+            <param name="vrste">Lista vrsta transakcija</param>
+            <param name="redirect">Redirekt na prošlu stranicu</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.TransakcijaViewModel.#ctor(RPPP_WebApp.Models.Transakcija,System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.Kartica})">
+            <summary>
+            Konstruktor
+            </summary>
+            <param name="transakcija">Objekt transakcije</param>
+            <param name="kartice">Lista kartica</param>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.TransakcijaViewModel.Transakcije">
+            <summary>
+            Lista transakcija
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.TransakcijaViewModel.transakcije">
+            <summary>
+            Lista TransakcijeViewModela
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.TransakcijaViewModel.Kartice">
+            <summary>
+            Lista kartica
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.TransakcijaViewModel.Vrste">
+            <summary>
+            Lista vrsta transakcija
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.TransakcijaViewModel.Transakcija">
+            <summary>
+            Objekt transakcije
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.TransakcijaViewModel.PagingInfo">
+            <summary>
+            Informacije o straničenju (paging).
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.TransakcijaViewModel.Redirect">
+            <summary>
+            Redirekt na stranicu
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.TransakcijeViewModel">
+            <summary>
+            ViewModel za prikaz entiteta transakcije u retku tablcie
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.TransakcijeViewModel.Model">
+            <summary>
+            Model transakcije
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.TransakcijeViewModel.PozivNaBr">
+            <summary>
+            Poziv na broj
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.TransakcijeViewModel.IdTrans">
+            <summary>
+            ID transakcije
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.TransakcijeViewModel.Opis">
+            <summary>
+            Opis transakcije
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.TransakcijeViewModel.Iznos">
+            <summary>
+            Iznos transakcije
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.TransakcijeViewModel.Datum">
+            <summary>
+            Datum transakcije
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.TransakcijeViewModel.IdVrsteNavigation">
+            <summary>
+            Vrsta transakcije uz koju je transakcija vezana
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.TransakcijeViewModel.BrKartice">
+            <summary>
+            Broj kartice
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.UlogaViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o ulogama za prikaz na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.UlogaViewModel.#ctor(System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.Uloga})">
+            <summary>
+            Konstruktor koji inicijalizira ViewModel s kolekcijom uloga.
+            </summary>
+            <param name="uloge">Kolekcija uloga.</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.UlogaViewModel.#ctor">
+            <summary>
+            Prazan konstruktor.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.UlogaViewModel.Uloge">
+            <summary>
+            Kolekcija uloga.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.UlogaViewModel.uloge">
+            <summary>
+            Kolekcija ViewModela za uloge.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.UlogaViewModel.PagingInfo">
+            <summary>
+            Podaci o strani za prikazivanje uloga.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.UlogaViewModel.Uloga">
+            <summary>
+            Podaci o pojedinačnoj ulozi.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.UlogaViewModel.VrsteUloga">
+            <summary>
+            Lista vrsta uloga.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.UlogeViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o ulogama za prikaz na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.UlogeViewModel.IdUloge">
+            <summary>
+            Identifikator uloge.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.UlogeViewModel.ImeUloge">
+            <summary>
+            Naziv uloge.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.UlogeViewModel.Opis">
+            <summary>
+            Opis uloge.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.UlogeViewModel.IdVrste">
+            <summary>
+            Identifikator vrste uloge.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.ViewLogViewModel">
+            <summary>
+            Prikazni model za prikaz logova na sučelju.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ViewLogViewModel.SelectedDate">
+            <summary>
+            Odabrani datum.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.ViewLogViewModel.LogEntries">
+            <summary>
+            Lista prikaznih modela unosa logova.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.LogEntryViewModel">
+            <summary>
+            Prikazni model za unos pojedinačnog loga.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.LogEntryViewModel.Time">
+            <summary>
+            Vrijeme unosa loga.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.LogEntryViewModel.Id">
+            <summary>
+            Identifikator unosa loga.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.LogEntryViewModel.Controller">
+            <summary>
+            Naziv kontrolera.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.LogEntryViewModel.Level">
+            <summary>
+            Razina loga.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.LogEntryViewModel.Message">
+            <summary>
+            Poruka loga.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.LogEntryViewModel.Url">
+            <summary>
+            URL povezan s unosom loga.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.LogEntryViewModel.Action">
+            <summary>
+            Naziv akcije.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.VrstaDokumentacijeViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o vrsti dokumentacije za prikaz i manipulaciju na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaDokumentacijeViewModel.IdVrsteDokumentacije">
+            <summary>
+            Jedinstveni identifikator vrste dokumenta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaDokumentacijeViewModel.NazivVrsteDokumentacije">
+            <summary>
+            Ime vrste dokumenta.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.VrstaPoslaViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o vrsta posla za prikaz i manipulaciju na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.VrstaPoslaViewModel.#ctor(System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.VrstaPosla})">
+            <summary>
+            Konstruktor koji inicijalizira ViewModel s vrstama posla.
+            </summary>
+            <param name="vrstaPosla">Enumeracija vrste posla.</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.VrstaPoslaViewModel.#ctor">
+            <summary>
+            Konstruktor bez parametara.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaPoslaViewModel.vrste">
+            <summary>
+            Enumeracija ViewModela vrste poslova.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaPoslaViewModel.VrstePosla">
+            <summary>
+            Enumeracija vrste poslova.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaPoslaViewModel.PagingInfo">
+            <summary>
+            Informacije o straničenju podataka.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaPoslaViewModel.VrstaPosla">
+            <summary>
+            Podaci o vrsti posla.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.VrstaProjektaViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o vrsti projekta za prikaz i manipulaciju na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaProjektaViewModel.IdVrsteProjekta">
+            <summary>
+            Jedinstveni identifikator vrste projekta.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaProjektaViewModel.NazivVrsteProjekta">
+            <summary>
+            Ime vrste projekta.
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.VrstaTransakcijeViewModel">
+            <summary>
+            ViewModel entiteta vrste transakcije
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.VrstaTransakcijeViewModel.#ctor(System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.VrstaTransakcije})">
+            <summary>
+            Konstruktor
+            </summary>
+            <param name="vrste">Lista vrsti transakcija</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.VrstaTransakcijeViewModel.#ctor">
+            <summary>
+            Konstruktor
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.VrstaTransakcijeViewModel.#ctor(RPPP_WebApp.Models.VrstaTransakcije)">
+            <summary>
+            Konstruktor
+            </summary>
+            <param name="vrsta">Objekt vrste transakcije</param>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaTransakcijeViewModel.Vrste">
+            <summary>
+            Lista vrsti transakcija
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaTransakcijeViewModel.vrste">
+            <summary>
+            Lista VrsteTransakcijaViewModela
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaTransakcijeViewModel.Vrsta">
+            <summary>
+            Objekt vrste transakcije
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaTransakcijeViewModel.PagingInfo">
+            <summary>
+            Informacije o straničenju
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.VrstaUlogeViewModel">
+            <summary>
+            ViewModel koji predstavlja podatke o vrsti uloge za prikaz na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.VrstaUlogeViewModel.#ctor(System.Collections.Generic.IEnumerable{RPPP_WebApp.Models.VrstaUloge})">
+            <summary>
+            Konstruktor koji inicijalizira ViewModel s kolekcijom vrsta uloga.
+            </summary>
+            <param name="vrstaUloge">Kolekcija vrsta uloga.</param>
+        </member>
+        <member name="M:RPPP_WebApp.ViewModels.VrstaUlogeViewModel.#ctor">
+            <summary>
+            Prazan konstruktor za ViewModel.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaUlogeViewModel.vrste">
+            <summary>
+            Kolekcija ViewModela za pojedine vrste uloga.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaUlogeViewModel.VrsteUloga">
+            <summary>
+            Kolekcija svih vrsta uloga.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaUlogeViewModel.PagingInfo">
+            <summary>
+            Informacije o straničenju za prikaz kolekcije vrsta uloga.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstaUlogeViewModel.VrstaUloge">
+            <summary>
+            Podaci o odabranoj vrsti uloge.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrsteDokumentacijeViewModel.VrsteDokumentacija">
+            <summary>
+            Kolekcija vrsti dokumentacija.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrsteDokumentacijeViewModel.PagingInfo">
+            <summary>
+            Informacije o straničenju (paging).
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.VrstePoslovaViewModel">
+            <summary>
+            ViewModel koji sadrži podatke o vrsti posla za prikaz na korisničkom sučelju.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstePoslovaViewModel.IdVrstePosla">
+            <summary>
+            Jedinstevni identifikator vrste posla.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrstePoslovaViewModel.NazivVrstePosla">
+            <summary>
+            Naziv vrste posla.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrsteProjekataViewModel.VrsteProjekta">
+            <summary>
+            Kolekcija vrsti projekata.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrsteProjekataViewModel.PagingInfo">
+            <summary>
+            Informacije o straničenju (paging).
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.VrsteTransakcijaViewModel">
+            <summary>
+            ViewModel entiteta vrste transakcije za prikaz retka u tablici
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrsteTransakcijaViewModel.IdVrste">
+            <summary>
+            ID vrste transakcije
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrsteTransakcijaViewModel.ImeVrste">
+            <summary>
+            Ime vrste transakcije
+            </summary>
+        </member>
+        <member name="T:RPPP_WebApp.ViewModels.VrsteUlogaViewModel">
+            <summary>
+            ViewModel koji predstavlja podatke o vrsti uloge.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrsteUlogaViewModel.IdVrste">
+            <summary>
+            Jedinstveni identifikator vrste uloge.
+            </summary>
+        </member>
+        <member name="P:RPPP_WebApp.ViewModels.VrsteUlogaViewModel.ImeVrste">
+            <summary>
+            Ime vrste uloge.
+            </summary>
+        </member>
+    </members>
+</doc>

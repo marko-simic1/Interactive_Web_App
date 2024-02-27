@@ -1,0 +1,348 @@
+﻿@model RPPP_WebApp.ViewModels.ZahtjevViewModel
+
+<link rel="stylesheet" href="~/css/ZahtjevZadaci/ZahtjevMD.css" />
+
+<div class="my-3">
+    <a class="btn btn-primary" data-toggle="tooltip" title="Prijašnji zahtjev" asp-controller="Zahtjev" asp-action="PrethodniZahtjev" asp-route-currentZahtjevId="@Model.Zahtjev.IdZahtjeva">
+        <i class="bi bi-arrow-left-circle-fill"></i>
+    </a>
+    <a class="btn btn-primary" data-toggle="tooltip" title="Sljedeči zahtjev" asp-controller="Zahtjev" asp-action="SljedeciZahtjev" asp-route-currentZahtjevId="@Model.Zahtjev.IdZahtjeva">
+        <i class="bi bi-arrow-right-circle-fill"></i>
+    </a>
+</div>
+
+<div class="d-flex gap-2 justify-content-center align-items-center w-100">
+
+    <button id="generatePdf" class="btn btn-danger mt-4">
+        PDF
+        <i class="bi bi-filetype-pdf"></i>
+    </button>
+
+    <button id="generateExcel" class="btn btn-success mt-4">
+        Excel
+        <i class="bi bi-file-earmark-spreadsheet"></i>
+    </button>
+
+</div>
+
+<form class="my-3 py-4" style="height: min-content" method="post"
+      asp-controller="Zahtjev" asp-action="UpdateZahtjev">
+
+    <div class="left d-flex flex-column gap-3">
+
+        <input hidden name="IdZahtjeva" value="@Model.Zahtjev.IdZahtjeva" />
+
+        <span>
+            <label class="text-start fw-bold">Naslov: </label>
+            <input name="Naslov" type="text" class="form-control" placeholder="Naslov" value="@Model.Zahtjev.Naslov" />
+        </span>
+
+        <span>
+            <label class="text-start fw-bold">Opis: </label>
+            <textarea name="Opis" class="form-control" rows="3">
+                @Model.Zahtjev.Opis
+            </textarea>
+        </span>
+
+        <span>
+            <label class="align-self-start fw-bold" for="Projekt">Projekt: </label>
+            <select name="Projekt" name="Projekt" class="form-select" aria-label="Default select example">
+                <option value="null">Ne pripada projektu</option>
+                @foreach (var projekt in Model.Projekti)
+                {
+                    var isSelected = Model.Zahtjev.IdProjektaNavigation != null && Model.Zahtjev.IdProjektaNavigation.IdProjekta == projekt.IdProjekta;
+                    <option value="@projekt.IdProjekta" selected="@isSelected">@projekt.ImeProjekta</option>
+                }
+            </select>
+        </span>
+
+        <div class="my-4">
+            <button type="submit" class="btn text-bg-success" data-toggle="tooltip" title="Uredi zahtjev">
+                <i class="bi bi-pen-fill fs-3"></i>
+            </button>
+            <button type="button" class="btn text-bg-danger" data-toggle="tooltip" title="Obriši zahtjev" id="delBtn" data-id="@Model.Zahtjev.IdZahtjeva" onclick="deleteZahtjev()">
+                <i class="bi bi-trash-fill fs-3"></i>
+            </button>
+        </div>
+    </div>
+
+
+
+    <div class="right d-flex flex-column">
+        <label class="align-self-start fw-bold" for="Vrsta">Vrsta zahtjeva: </label>
+        <select name="Vrsta" class="form-select" aria-label="Default select example">
+            <option value="null">Nema vrste</option>
+            @foreach (var vrstaZah in Model.VrstaZahtjeva)
+            {
+                var isSelected = Model.Zahtjev.IdVrsteNavigation != null && Model.Zahtjev.IdVrsteNavigation.IdVrste == vrstaZah.IdVrste;
+                <option value="@vrstaZah.IdVrste" selected="@isSelected">@vrstaZah.ImeZahtjeva</option>
+            }
+        </select>
+    </div>
+
+
+</form>
+
+<script>
+    function deleteZahtjev() {
+        let confirmation = window.confirm("Brisanjem zahtjeva brišete sve zadatke pridružene tom zahtjevu. Nastaviti s brisanjem?");
+
+        if (!confirmation) return false;
+
+        let id = delBtn.getAttribute('data-id');
+
+        fetch('/Zahtjev/ObrisiZahtjev/' + id, {
+            method: 'DELETE'
+        }).then(res => {
+            console.log(res);
+            location.href = '/Zahtjev/Zahtjevi';
+        }).catch(err => console.log(err));
+    }
+
+</script>
+
+<div class="bold-line"></div>
+
+<h4 class="text-start mt-4">Zadaci</h4>
+
+<div class="d-flex justify-content-center">
+    <a class="btn btn-primary mt-4" asp-controller="Zadaci" asp-action="CreateFormZadatak" asp-route-id="@Model.Zahtjev.IdZahtjeva">
+        <i class="bi bi-plus-lg"></i>
+        Novi zadatak
+    </a>
+</div>
+
+<div class="table-responsive">
+
+    <table class="table table-striped my-4">
+        <thead>
+            <tr>
+                <th>
+                    Naslov
+                </th>
+                <th>
+                    Opis
+                </th>
+                <th>
+                    Planirani pocetak
+                </th>
+                <th>
+                    Planirani kraj
+                </th>
+                <th>
+                    Stvarni pocetak
+                </th>
+                <th>
+                    Stvarni kraj
+                </th>
+                <th>
+                    Prioritet
+                </th>
+                <th>
+                    Zahjev
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Osoba
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody class="table-group-divider">
+            @foreach (var zadatak in Model.Zahtjev.Zadatak)
+            {
+                <tr class="fs-6">
+                    <td>
+                        @zadatak.Naslov
+                    </td>
+                    <td>
+                        @if (zadatak.Opis.Length > 50)
+                        {
+                            <span class="truncated-text" data-full-text="@zadatak.Opis">
+                                <span class="textOpis user-select-all">
+                                    @zadatak.Opis.Substring(0, 50)
+                                </span>
+                                <span class="expand-button text-danger p-1 w-100 fs-5" style="cursor: pointer">
+                                    ...
+                                </span>
+                                <span class="truncate-button d-none p-3 text-danger" style="cursor: pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707" />
+                                    </svg>
+                                </span>
+                            </span>
+                        }
+                        else
+                        {
+                            @zadatak.Opis
+                        }
+                    </td>
+                    <td>
+                        @zadatak.PlanPocetak
+                    </td>
+                    <td>
+                        @zadatak.PlanKraj
+
+                    </td>
+                    <td>
+                        @if (@zadatak.StvPoc != null)
+                        {
+                            @zadatak.StvPoc
+                        }
+                        else
+                        {
+                            <span class="text-danger">Nije još započeto</span>
+                        }
+                    </td>
+                    <td>
+                        @if (@zadatak.StvKraj != null)
+                        {
+                            @zadatak.StvKraj
+                        }
+                        else
+                        {
+                            <span class="text-danger">Nije još završeno</span>
+                        }
+                    </td>
+                    <td>
+                        @zadatak.Prioritet
+                    </td>
+                    <td>
+                        @Model.Zahtjev.Naslov
+                    </td>
+                    <td>
+                        @zadatak.IdStatusaNavigation.ImeStatusa
+                    </td>
+                    <td>
+                        @if (zadatak.IdOsobaNavigation != null)
+                        {
+                            @zadatak.IdOsobaNavigation.Ime
+                        }
+                        else
+                        {
+                            <span class="text-danger">Nije pridružen osobi</span>
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" asp-controller="Zadaci" asp-action="EditFormZadatak" asp-route-id="@zadatak.IdZadatka">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger delete-btn" data-id="@zadatak.IdZadatka">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script src="~/js/ZahtjevZadaci/Zadaci.js" asp-append-version="true"></script>
+
+
+
+@if (TempData.ContainsKey("SuccessMessage"))
+{
+    <div style="position:absolute; bottom: 2rem; right: 2rem;" class="toast bg-success text-light" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Uspjeh</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            @TempData["SuccessMessage"]
+        </div>
+    </div>
+
+    <script>
+        // Show the toast when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            var toast = new bootstrap.Toast(document.querySelector('.toast'));
+            toast.show();
+        });
+    </script>
+}
+
+@if (TempData.ContainsKey("NotFoundMessage"))
+{
+    <div style="position:absolute; bottom: 2rem; right: 2rem;" class="toast bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Uspjeh</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            @TempData["NotFoundMessage"]
+        </div>
+    </div>
+
+    <script>
+        // Show the toast when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            var toast = new bootstrap.Toast(document.querySelector('.toast'));
+            toast.show();
+        });
+    </script>
+}
+
+@if (TempData.ContainsKey("ServerError"))
+{
+    <div style="position:absolute; bottom: 2rem; right: 2rem;" class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Uspjeh</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            @TempData["ServerError"]
+        </div>
+    </div>
+
+    <script>
+        // Show the toast when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            var toast = new bootstrap.Toast(document.querySelector('.toast'));
+            toast.show();
+        });
+    </script>
+}
+
+<script>
+    document.querySelectorAll('textarea').forEach((textarea) => {
+        textarea.textContent = textarea.textContent.trim();
+    });
+</script>
+
+<script>
+    document.getElementById('generatePdf').addEventListener('click', function () {
+        // Use AJAX or other methods to call the action that generates the PDF
+        var zahtjevId = @Model.Zahtjev.IdZahtjeva; // Get the Id from the model
+        var url = '@Url.Action("ZahtjevMdPdf", "Report")' + '?id=' + zahtjevId;
+
+        fetch(url, {
+            method: 'GET'
+        }).then(response => {
+            if (response.ok) {
+                return response.blob();
+            } else {
+                console.error('Failed to generate PDF');
+            }
+        }).then(blob => {
+            // Create a download link for the PDF
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Master.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }).catch(e => alert(`Pdf nije dobro generiran, molim pokušajte ponovo`));
+    });
+
+    document.getElementById('generateExcel').addEventListener('click', function () {
+        window.location.href = '@Url.Action("ZahtjevMdExcel", "Report")' + '?id=' + @Model.Zahtjev.IdZahtjeva;
+    });
+</script>

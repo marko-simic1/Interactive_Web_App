@@ -1,0 +1,121 @@
+﻿@model RPPP_WebApp.ViewModels.PosaoViewModel
+@using RPPP_WebApp.Controllers
+
+@{
+    ViewData["Title"] = "Poslovi";
+}
+
+
+<h1>Poslovi</h1>
+
+
+<div>
+    <a asp-action="Create" class="btn btn-primary">Dodaj novi posao</a>
+</div>
+<hr />
+
+<pager page-info="@Model.PagingInfo" page-action="Index" page-title="Unesite željenu stranicu"
+       class="float-end">
+</pager>
+
+<table class="table table-sm table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                <a asp-route-sort="1" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 1 ? !Model.PagingInfo.Ascending : true)">
+                    Ime posla
+                </a>
+            </th>
+            <th>
+                <a asp-route-sort="2" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 2 ? !Model.PagingInfo.Ascending : true)">
+                    Opis
+                </a>
+            </th>
+            <th>
+                <a asp-route-sort="2" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 2 ? !Model.PagingInfo.Ascending : true)">
+                    Vrsta posla
+                </a>
+            </th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var posao in Model.poslovi)
+        {
+            <partial name="Get" model="posao" />
+        }
+    <tbody />
+</table>
+<button id="generatePdfButton" class="btn btn-primary">Izvezite PDF</button>
+<button id="generateExcelButton" class="btn btn-success">Izvezite Excel</button>
+
+<h5 class="text-center">Uvoz podataka korištenjem Excela</h5>
+
+<form method="post" enctype="multipart/form-data" action="@Url.Action("ImportPosaoExcel", "Posao")">
+    <div class="mb-3">
+        <label for="excelFile" class="form-label">Odaberite Excel datoteku:</label>
+        <input type="file" class="form-control" id="excelFile" name="file" accept=".xlsx">
+    </div>
+    <button type="submit" class="btn btn-primary">Uvezi podatke</button>
+</form>
+
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+    <script>
+        var importStatus = '@(TempData["imported"])';
+        if (importStatus === 'True') {
+            alert("Podaci su uspješno uvezeni.");
+        } else if (importStatus === 'False') {
+            var importError = '@(TempData["importError"])';
+            alert("Greška prilikom uvoza podataka: " + importError);
+        }
+        document.getElementById('generatePdfButton').addEventListener('click', function () {
+            // Use AJAX or other methods to call the action that generates the PDF
+            fetch('@Url.Action("PosloviPDF", "Report")', {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    console.error('Failed to generate PDF');
+                }
+            }).then(blob => {
+                // Create a download link for the PDF
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'poslovi.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        });
+
+        document.getElementById('generateExcelButton').addEventListener('click', function () {
+
+            window.location.href = '@Url.Action("PosaoExcel", "Report")';
+        });
+    </script>
+}
+
+@if (TempData["used"] != null && (bool)TempData["used"])
+{
+    <script>alert("Posao se koristi");</script>
+}
+@if (TempData["deleted"] != null && (bool)TempData["deleted"])
+{
+    <script>alert("Posao je obrisan");</script>
+}
+@if (TempData["updated"] != null && (bool)TempData["updated"])
+{
+    <script>alert("Posao je ažuriran");</script>
+}
+@if (TempData["created"] != null && (bool)TempData["created"])
+{
+    <script>alert("Posao je stvoren");</script>
+}

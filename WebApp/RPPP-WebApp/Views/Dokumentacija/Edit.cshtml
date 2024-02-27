@@ -1,0 +1,106 @@
+﻿@*
+@model RPPP_WebApp.Models.Dokumentacija
+
+@{
+    ViewData["Title"] = "Uređivanje dokumenta";
+}
+
+<h1>Uredi dokumentaciju</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-route-id="@Model.IdDok"
+              asp-route-page="@ViewBag.Page"
+              asp-route-sort="@ViewBag.Sort"
+              asp-route-ascending="@ViewBag.Ascending"
+              asp-action="Edit">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="IdDok" />
+
+            <div class="form-group">
+                <label asp-for="ImeDok" class="control-label"></label>
+                <input asp-for="ImeDok" class="form-control" />
+                <span asp-validation-for="ImeDok" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdProjekta" class="control-label">Projekt</label>
+                <select asp-for="IdProjekta" class="form-control" asp-items="ViewBag.Projekti">
+                    <option disabled selected value="">Odaberite projekt</option>
+                </select>
+                <div class="form-text"><span asp-validation-for="IdProjekta" class="text-danger"></span></div>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdVrste" class="control-label">Vrsta dokumenta</label>
+                <select asp-for="IdVrste" class="form-control" asp-items="ViewBag.VrsteDokumentacije">
+                    <option disabled selected value="">Odaberite vrstu dokumenta</option>
+                </select>
+                <div class="form-text"><span asp-validation-for="IdVrste" class="text-danger"></span></div>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Spremi</button>
+                <button asp-action="Index"
+                        asp-route-page="@ViewBag.Page"
+                        asp-route-sort="@ViewBag.Sort"
+                        asp-route-ascending="@ViewBag.Ascending" class="btn btn-secondary" type="submit">
+                    Odustani
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+*@
+
+@model RPPP_WebApp.Models.Dokumentacija
+
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-start">
+        <input asp-for="ImeDok" class="form-control" placeholder="ime dok" />
+    </td>
+    <td class="text-start">
+        <select asp-for="IdProjekta" class="form-control" asp-items="ViewBag.Projekti">
+            <option disabled selected value="">Odaberite projekt</option>
+        </select>
+    </td>
+    <td class="text-start">
+        <select asp-for="IdVrste" class="form-control" asp-items="ViewBag.VrsteDokumentacije">
+            <option disabled selected value="">Odaberite vrstu dokumenta</option>
+        </select>
+    </td>
+
+    <td>
+        <input type="hidden" asp-for="IdDok" />
+        <button class="btn btn-sm cancel" hx-include="closest tr"
+                hx-post="@Url.Action(nameof(DokumentacijaController.Edit), new { id = Model.IdDok })"
+                title="Spremi">
+            Spremi
+        </button>
+    </td>
+    <td>
+        <button class="btn btn-sm cancel"
+                hx-get="@Url.Action(nameof(DokumentacijaController.Get), new { id = Model.IdDok })"
+                title="Odustani">
+
+            Odustani
+        </button>
+    </td>
+    <td>
+        <div asp-validation-summary="All"></div>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

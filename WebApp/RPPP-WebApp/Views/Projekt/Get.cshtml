@@ -1,0 +1,35 @@
+﻿@model RPPP_WebApp.ViewModels.ProjektViewModel
+@using RPPP_WebApp.Controllers
+
+<tr hx-target="this" hx-swap="outerHTML">
+    <td><a asp-action="Index2" asp-route-id="@Model.IdProjekta" title="Ime">@Model.ImeProjekta</a></td>
+    <td>@Model.Kratica</td>
+    <td>@Model.Sazetak</td>
+    <td>@Model.DatumPoc</td>
+    <td>@Model.DatumZav</td>
+    <td>@Model.BrKartice</td>
+    <td>@Model.imeVrste</td>
+    <td>
+        <a class="btn btn-sm btn-warning"
+           hx-get="@Url.Action(nameof(ProjektController.Edit), new { id = Model.IdProjekta })"
+           title="Ažuriraj">Ažuriraj</a>
+    </td>
+    <td>
+        <form asp-action="Delete" method="delete">
+            <input type="hidden" name="IdProjekta" value="@Model.IdProjekta" />
+            <button class="btn btn-sm btn-danger delete"
+                    hx-delete="@Url.Action(nameof(ProjektController.Delete), new { id = Model.IdProjekta })"
+                    hx-confirm="Obrisati projekt?"
+                    title="Obriši">
+                Obriši
+            </button>
+        </form>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

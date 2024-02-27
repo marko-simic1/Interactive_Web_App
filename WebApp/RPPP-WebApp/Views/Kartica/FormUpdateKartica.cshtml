@@ -1,0 +1,51 @@
+﻿@model RPPP_WebApp.ViewModels.KarticaViewModel
+
+@{
+    ViewData["Title"] = "Update Kartica";
+}
+
+<h2 class="text-center mt-4">@ViewData["Title"]</h2>
+
+<form asp-action="UpdateKartica" method="post" class="d-flex flex-column gap-3">
+
+    <input type="hidden" name="page" value="@Model.PagingInfo.CurrentPage" />
+    <input type="hidden" name="sort" value="@Model.PagingInfo.Sort" />
+    <input type="hidden" name="ascending" value="@Model.PagingInfo.Ascending.ToString()" />
+    <input type="hidden" name="brKartice" value="@Model.Kartica.BrKartice" />
+
+    <span>
+        <label class="align-self-start fw-bold" for="projekt">Projekt: </label>
+        <select name="projekt" class="form-select" aria-label="Default select example">
+            <option value="null">Ne pripada projektu</option>
+            @foreach (var projekt in Model.Projekti)
+            {
+                var isSelected = Model.Kartica.Projekt.FirstOrDefault()?.IdProjekta == projekt.IdProjekta;
+                if (isSelected) {
+                    <option value="@projekt.IdProjekta" selected="selected")>
+                    @projekt.ImeProjekta
+                    </option>
+                } else
+                {
+                    <option value="@projekt.IdProjekta">
+                        @projekt.ImeProjekta
+                    </option>
+                }
+            }
+        </select>
+    </span>
+
+    <span>
+        <label class="fw-bold text-start" for="newBrKartice">Broj kartice: </label>
+        <input class="form-control" name="newBrKartice" value="@Model.Kartica.BrKartice" disabled />
+    </span>
+
+    <span>
+        <label class="fw-bold text-start" for="Stanje">Stanje: </label>
+        <input class="form-control" name="stanje" value="@Model.Kartica.Stanje" type="number" step="0.01" />
+    </span>
+
+    <div class="col-12 d-flex justify-content-center">
+        <button style="width:200px" type="submit" class="btn btn-primary w-10">Ažuriraj</button>
+    </div>
+
+</form>

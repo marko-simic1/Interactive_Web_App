@@ -1,0 +1,34 @@
+﻿@model RPPP_WebApp.Models.VrstaDok
+
+@{
+    ViewData["Title"] = "Nova vrsta dokumentacije";
+}
+
+<h1>Unos nove vrste dokumentacije</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="ImeVrste" class="control-label"></label>
+                <input asp-for="ImeVrste" class="form-control" />
+                <span asp-validation-for="ImeVrste" class="text-danger"></span>
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-primary" type="submit">Dodaj</button>
+                <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

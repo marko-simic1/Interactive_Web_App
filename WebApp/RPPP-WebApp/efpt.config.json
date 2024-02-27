@@ -1,0 +1,121 @@
+﻿{
+   "CodeGenerationMode": 3,
+   "ContextClassName": "ProjektDbContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "RPPP_WebApp",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[dokumentacija]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[imaPartnera]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[kartica]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[obavlja]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[osoba]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[partner]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[posao]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[projekt]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[radiNa]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[status]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[transakcija]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[uloga]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[vrstaDok]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[vrstaPosla]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[vrstaProjekta]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[vrstaTransakcije]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[vrstaUloge]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[vrstaZah]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[zadatak]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[zahtjev]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "dosa.RPPP02.dbo",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}

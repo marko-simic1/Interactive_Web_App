@@ -1,0 +1,36 @@
+﻿@model RPPP_WebApp.ViewModels.VrstaTransakcijeViewModel
+
+<h2 class="text-center mt-3">Stvorite novu vrstu</h2>
+
+<form asp-action="CreateVrstaTransakcije" method="post" class="d-flex flex-column gap-3">
+
+    <input type="hidden" name="page" value="@Model.PagingInfo.CurrentPage" />
+    <input type="hidden" name="sort" value="@Model.PagingInfo.Sort" />
+    <input type="hidden" name="ascending" value="@Model.PagingInfo.Ascending.ToString()" />
+
+    <span>
+        <label class="fw-bold text-start" for="imeVrste">Ime vrste: </label>
+        <input type="text" class="form-control" name="imeVrste" placeholder="Ime vrste">
+    </span>
+
+    <div class="d-flex gap-2 align-self-center mt-4">
+        <button type="submit" class="btn text-bg-primary" data-toggle="tooltip" title="Dodaj Zahtjev">
+            <i class="bi bi-plus-circle-fill fs-3"></i>
+        </button>
+        <button type="reset" class="btn text-bg-warning" data-toggle="tooltip" title="Reset form">
+            <i class="bi bi-eraser-fill fs-3"></i>
+        </button>
+        <a asp-controller="Transakcija" asp-action="VrsteTransakcija" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-sort="@Model.PagingInfo.Sort" asp-route-ascending="@Model.PagingInfo.Ascending" class="btn text-bg-danger" data-toggle="tooltip" title="Odustani">
+            <i class="bi bi-escape fs-3"></i>
+        </a>
+
+    </div>
+
+</form>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+</script>

@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Pregled svih uloga</title>
+    <link href="lib/jqueryui/themes/base/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="lib/jtable/lib/themes/lightcolor/blue/jtable.min.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" asp-append-version="true" />
+    <link href="~/lib/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12" id="uloge">
+
+            </div>
+        </div>
+    </div>
+
+    <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: 5rem; font-size: larger;">
+        <p> Podaci se uspješno dohvate i pošalju na klijenta (moguče vidjteti u dveloper tools u brosweru pod mreža (netwroek tab) i u dogovoru (response) se nalaze svi traženi podaci).</p>
+        <p>No posotji bug <i class="bi bi-bug-fill"></i> kod prikazivanja koji nisam mogao pronači. <i class="bi bi-emoji-frown-fill"></i> </p>
+    </div>
+
+    <script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/jqueryui/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="lib/jtable/lib/jquery.jtable.min.js"></script>
+    <script type="text/javascript" src="lib/jtable/lib/localization/jquery.jtable.hr.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#uloge').jtable({
+                title: 'Popis uloga',
+                paging: true,
+                pageSize: 10,
+                sorting: true,
+                defaultSorting: 'IdUloge DESC',
+                actions: {
+                    listAction: 'jtable/uloga/getall',
+                    createAction: 'jtable/uloga/create',
+                    updateAction: 'jtable/uloga/update',
+                    deleteAction: 'jtable/uloga/delete'
+                },
+                fields: {
+                    IdUloge: {
+                        key: true,
+                        list: false
+                    },
+                    ImeUloge: {
+                        title: 'Ime Uloge',
+                        width: '20%'
+                    },
+                    Opis: {
+                        title: 'Opis',
+                        width: '40%'
+                    },
+                    IdVrste: {
+                        title: 'Id Vrste',
+                        width: '30%'
+                    }
+                }
+            });
+
+            $("#uloge").jtable('load');
+
+        });
+    </script>
+
+</body>
+</html>

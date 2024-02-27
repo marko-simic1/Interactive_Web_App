@@ -1,0 +1,164 @@
+﻿@model RPPP_WebApp.ViewModels.VrsteProjekataViewModel
+@using RPPP_WebApp.Controllers
+
+@{
+    ViewData["Title"] = "Vrste projekata";
+}
+
+<h1>Vrste projekata</h1>
+
+@*
+<div>
+    <a asp-action="Create" class="btn btn-primary">Dodaj novu vrstu projekta</a>
+</div>
+*@
+
+<form asp-action="Create" method="post"
+      class="d-flex justify-content-start align-items-center gap-2">
+    <label for="ImeVrste">Ime vrste:</label>
+    <input required name="ImeVrste" placeholder="Ime vrste" />
+    <button type="submit" class="btn btn-primary">
+        +
+    </button>
+</form>
+
+<hr />
+
+<pager page-info="@Model.PagingInfo" page-action="Index" page-title="Unesite željenu stranicu"
+       class="float-end">
+</pager>
+
+<table class="table table-sm table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                <a asp-route-sort="1" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-ascending="@(Model.PagingInfo.Sort == 1 ? !Model.PagingInfo.Ascending : true)">
+                    Naziv vrste projekta
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vrstaProjekta in Model.VrsteProjekta)
+        {
+            <partial name="Get" model="vrstaProjekta" />
+        }
+    </tbody>
+    @*
+    <tbody>
+    @foreach (var item in Model.VrsteProjekta)
+    {
+    <tr>
+    <td class="text-left">
+    @item.NazivVrsteProjekta
+    </td>
+    <td>
+    <a asp-action="Edit"
+    asp-route-id="@item.IdVrsteProjekta"
+    asp-route-page="@Model.PagingInfo.CurrentPage"
+    asp-route-sort="@Model.PagingInfo.Sort"
+    asp-route-ascending="@Model.PagingInfo.Ascending"
+    class="btn btn-sm btn-warning" title="Uredi">Uredi</a>
+    </td>
+    <td>
+
+    <form asp-action="Delete" method="post"
+    asp-route-id="@item.IdVrsteProjekta"
+    asp-route-page="@Model.PagingInfo.CurrentPage"
+    asp-route-sort="@Model.PagingInfo.Sort"
+    asp-route-ascending="@Model.PagingInfo.Ascending">
+    <input type="hidden" name="IdVrsteProjekta" value="@item.IdVrsteProjekta" />
+    <button hx-confirm="Jeste li sigurni da želite obrisati vrstu projekta?"
+    hx-delete="@Url.Action(nameof(VrstaDokumentacijeController.Delete), new { id = item.IdVrsteProjekta})"
+    type="submit" class="btn btn-sm btn-danger delete" title="Obriši">
+    Obriši
+    </button>
+    </form>
+    <td />
+    </tr>
+    }
+    </tbody>
+    *@
+</table>
+
+<button id="generatePdfButton" class="btn btn-primary">Izvezite PDF</button>
+<button id="generateExcelButton" class="btn btn-success">Izvezite Excel</button>
+
+
+<h5 class="text-center">Uvoz podataka korištenjem Excela</h5>
+
+<form method="post" enctype="multipart/form-data" action="@Url.Action("ImportPartnerExcel", "VrstaProjekta")">
+    <div class="mb-3">
+        <label for="excelFile" class="form-label">Odaberite Excel datoteku:</label>
+        <input type="file" class="form-control" id="excelFile" name="file" accept=".xlsx">
+    </div>
+    <button type="submit" class="btn btn-primary">Uvezi podatke</button>
+</form>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+    <script>
+        var importStatus = '@(TempData["imported"])';
+        if (importStatus === 'True') {
+            alert("Podaci su uspješno uvezeni.");
+        } else if (importStatus === 'False') {
+            var importError = '@(TempData["importError"])';
+            alert("Greška prilikom uvoza podataka: " + importError);
+        }
+        document.getElementById('generatePdfButton').addEventListener('click', function () {
+            // Use AJAX or other methods to call the action that generates the PDF
+            fetch('@Url.Action("VrstaProjektaPDF", "Report")', {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    console.error('Failed to generate PDF');
+                }
+            }).then(blob => {
+                // Create a download link for the PDF
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'vrsteProjekta.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        });
+
+        document.getElementById('generateExcelButton').addEventListener('click', function () {
+
+            window.location.href = '@Url.Action("VrstaProjektaExcel", "Report")';
+        });
+    </script>
+}
+
+@if (TempData["used"] != null && (bool)TempData["used"])
+{
+    <script>
+        alert("Vrsta projekta se koristi");
+    </script>
+}
+@if (TempData["deleted"] != null && (bool)TempData["deleted"])
+{
+    <script>
+        alert("Vrsta projekta je obrisana");
+    </script>
+}
+@if (TempData["updated"] != null && (bool)TempData["updated"])
+{
+    <script>
+        alert("Vrsta projekta je ažurirana");
+    </script>
+}
+@if (TempData["created"] != null && (bool)TempData["created"])
+{
+    <script>
+        alert("Vrsta projekta je stvorena");
+    </script>
+}

@@ -1,0 +1,42 @@
+﻿@model RPPP_WebApp.Models.Kartica
+
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-start">
+        <input asp-for="BrKartice" class="form-control" disabled />
+    </td>
+    <td class="text-start">
+        <input asp-for="Stanje" class="form-control" />
+    </td>
+    <td class="text-start">
+        @{
+            string projectName = Model.Projekt?.FirstOrDefault()?.ImeProjekta ?? "Nema projekta";
+        }
+        <input value="@projectName" class="form-control" disabled />
+    </td>
+    <td>
+        <input type="hidden" asp-for="BrKartice" />
+        <button class="btn btn-sm cancel" hx-include="closest tr"
+                hx-post="@Url.Action(nameof(KarticaController.Edit), new { BrKartice = Model.BrKartice })"                
+                title="Spremi">
+            Spremi
+        </button>
+    </td>
+    <td>
+        <button class="btn btn-sm cancel"
+                hx-get="@Url.Action(nameof(KarticaController.Get), new { BrKartice = Model.BrKartice })"
+                title="Odustani">
+
+            Odustani
+        </button>
+    </td>
+    <td>
+        <div asp-validation-summary="All"></div>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

@@ -1,0 +1,30 @@
+﻿@model OsobeViewModels
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-center">
+        <a asp-action="index2" asp-route-id="@Model.IdOsoba" title="Ime">@Model.Ime</a>
+    </td>
+    <td class="text-center">@Model.Prezime</td>
+    <td class="text-center">@Model.IdOsoba</td>
+    <td class="text-center">@Model.Telefon</td>
+    <td class="text-center">@Model.Email</td>
+    <td class="text-center">@Model.Iban</td>
+    <td>
+        <a class="btn btn-sm"
+           hx-get="@Url.Action(nameof(OsobaController.Edit), new { id = Model.IdOsoba })"
+           title="Ažuriraj"><i class="bi bi-arrow-clockwise"></i></a>
+    </td>
+    <td>
+        <button class="btn btn-sm btn-danger delete"
+                hx-confirm="Obrisati Osobu?"
+                hx-delete="@Url.Action(nameof(OsobaController.Delete), new { id = Model.IdOsoba })"
+                title="Obriši"><i class="bi bi-trash"></i>
+        </button>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

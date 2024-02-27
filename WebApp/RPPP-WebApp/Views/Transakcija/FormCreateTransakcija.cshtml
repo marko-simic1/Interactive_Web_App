@@ -1,0 +1,91 @@
+﻿@model RPPP_WebApp.ViewModels.TransakcijaViewModel
+
+<h2 class="text-center mt-3">Stvorite novu transakciju</h2>
+
+<form asp-action="CreateTransakcija" method="post" class="d-flex flex-column gap-3">
+
+    <input type="hidden" name="page" value="@Model.PagingInfo.CurrentPage" />
+    <input type="hidden" name="sort" value="@Model.PagingInfo.Sort" />
+    <input type="hidden" name="ascending" value="@Model.PagingInfo.Ascending.ToString()" />
+    <input type="hidden" name="redirect" value="@(Model.Transakcija.BrKartice == 0 ? 1 : 0)" />
+    
+    <span>
+        <label class="fw-bold text-start" for="model">Model: </label>
+        <input type="text" class="form-control" name="model" placeholder="HR99">
+    </span>
+
+    <span>
+        <label class="fw-bold text-start" for="iznos">Iznos: </label>
+        <input type="number" step="0.01" class="form-control" name="iznos" value="0" placeholder="0" required>
+    </span>
+
+    <span>
+        <label class="fw-bold text-start" for="opis">Opis: </label>
+        <textarea type="text" class="form-control" name="opis" placeholder="Opis transakcije" ></textarea>
+    </span>
+
+    <span>
+        <label class="fw-bold text-start" for="pozivNaBr">Poziv na broj: </label>
+        <input type="text" class="form-control" name="pozivNaBr" placeholder="00000000">
+    </span>
+
+    <span class="mb-3">
+        <label class="align-self-start fw-bold" for="brKartice">Broj kartice: </label>
+        <input type="number" class="form-control" name="brKartice" list="kartice" placeholder="1000000" required value="@(Model.Transakcija.BrKartice != 0 ? @Model.Transakcija.BrKartice : "")" />
+            <datalist id="kartice">
+                @foreach (var kartica in Model.Kartice)
+                {
+                    <option value="@kartica.BrKartice" >
+                        @kartica.BrKartice
+                    </option>
+                }
+            </datalist>
+    </span>
+
+    <span>
+        <label class="align-self-start fw-bold" for="idVrste">Vrsta: </label>
+        <select name="idVrste" class="form-select" aria-label="Default select example">
+            @foreach (var vrsta in Model.Vrste)
+            {
+                <option value="@vrsta.IdVrste" >
+                    @vrsta.ImeVrste
+                </option>
+            }
+        </select>
+    </span>
+
+    <span>
+        <label class="fw-bold text-start" for="datum">Datum: </label>
+        <input type="datetime-local" class="form-control" name="datum">
+    </span>
+
+    <div class="d-flex gap-2 align-self-center mt-4">
+        <button type="submit" class="btn text-bg-primary" data-toggle="tooltip" title="Dodaj Zahtjev">
+            <i class="bi bi-plus-circle-fill fs-3"></i>
+        </button>
+        <button type="reset" class="btn text-bg-warning" data-toggle="tooltip" title="Reset form">
+            <i class="bi bi-eraser-fill fs-3"></i>
+        </button>
+        @if(Model.Transakcija.BrKartice == 0)
+        {
+            <a asp-controller="Transakcija" asp-action="Transakcije" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-sort="@Model.PagingInfo.Sort" asp-route-ascending="@Model.PagingInfo.Ascending" class="btn text-bg-danger" data-toggle="tooltip" title="Odustani">
+                <i class="bi bi-escape fs-3"></i>
+            </a>
+        }
+        else
+        {
+            <a asp-controller="Kartica" asp-action="KarticeMD" asp-route-brKartice="@Model.Transakcija.BrKartice" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-sort="@Model.PagingInfo.Sort" asp-route-ascending="@Model.PagingInfo.Ascending" class="btn text-bg-danger" data-toggle="tooltip" title="Odustani">
+                <i class="bi bi-escape fs-3"></i>
+            </a>
+        }
+
+    </div>
+
+</form>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+</script>

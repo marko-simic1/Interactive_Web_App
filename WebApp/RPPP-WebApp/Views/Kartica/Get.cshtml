@@ -1,0 +1,37 @@
+﻿@model KarticeViewModel
+@using RPPP_WebApp.Controllers
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-center">
+        <a asp-controller="Kartica" asp-action="KarticeMD" asp-route-brKartice="@Model.BrKartice" title="Broj kartice">@Model.BrKartice</a>
+    </td>
+    <td class="text-center">@Model.Stanje</td>
+    <td class="text-center">
+        @if (Model.Projekt.Any())
+        {
+            @Model.Projekt.FirstOrDefault().ImeProjekta
+        }
+        else
+        {
+            <text>Kartica nema svoj projekt</text>
+        }
+    </td>
+    <td>
+        <a class="btn btn-primary" title="Ažuriraj" hx-get="@Url.Action(nameof(KarticaController.Edit), new { brKartice = Model.BrKartice })">
+            <i class="bi bi-pencil-square"></i>
+        </a>
+    </td>
+    <td>
+        <button class="btn btn-sm btn-danger delete"
+                hx-confirm="Obrisati Osobu?"
+                hx-delete="@Url.Action(nameof(KarticaController.Delete), new { brKartice = Model.BrKartice })"
+                title="Obriši"><i class="bi bi-trash"></i>
+        </button>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

@@ -1,0 +1,53 @@
+﻿@model RPPP_WebApp.ViewModels.PosaoViewModel
+
+@{
+    ViewBag.Title = "Nova osoba";
+}
+
+<h2>Unos nove osobe</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All"></div>
+
+
+    <div class="mb-3">
+        <label asp-for="Posao.ImePosla" class="form-label"></label>
+        <input asp-for="Posao.ImePosla" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Posao.ImePosla" class="text-danger"></span></div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Posao.Opis" class="form-label"></label>
+        <input asp-for="Posao.Opis" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Posao.Opis" class="text-danger"></span></div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Posao.IdVrste" class="form-label"></label>
+        <input asp-for="Posao.IdVrste" class="form-control" />
+        <div class="form-text"><span asp-validation-for="Posao.IdVrste" class="text-danger"></span></div>
+    </div>
+
+
+
+
+
+
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Dodaj</button>
+        <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+    </div>
+    <br />
+    <br />
+    <br />
+</form>
+
+@section scripts {
+    <partial name="IncludeValidation" />
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="~/js/autocomplete.js" asp-append-version="true"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+
+}

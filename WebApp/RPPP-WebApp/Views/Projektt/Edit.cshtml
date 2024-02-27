@@ -1,0 +1,48 @@
+﻿@model RPPP_WebApp.Models.Projekt
+
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-start">
+        <input asp-for="ImeProjekta" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="Kratica" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="Sazetak" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="DatumPoc" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="DatumZav" class="form-control" />
+    </td>
+    <td class="text-start">
+        <input asp-for="BrKartice" class="form-control" />
+    </td>
+    <td>
+        <input type="hidden" asp-for="IdProjekta" />
+        <button class="btn btn-sm cancel" hx-include="closest tr"
+                hx-post="@Url.Action(nameof(ProjekttController.Edit), new { id = Model.IdProjekta })"
+                title="Spremi">
+            Spremi
+        </button>
+    </td>
+    <td>
+        <button class="btn btn-sm cancel"
+                hx-get="@Url.Action(nameof(ProjekttController.Get), new { id = Model.IdProjekta })"
+                title="Odustani">
+
+            Odustani
+        </button>
+    </td>
+    <td>
+        <div asp-validation-summary="All"></div>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

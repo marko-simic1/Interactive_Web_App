@@ -1,0 +1,156 @@
+﻿@model RPPP_WebApp.ViewModels.ZadaciViewModel
+
+<h2 class="text-center mt-4">Stvori zadatak</h2>
+
+@{
+    string controller = "Zadaci";
+    string action = "Index";
+    string id = "";
+
+    string callingUrl = "";
+    string[] routeParams = new string[0];
+
+    if (ViewContext?.HttpContext?.Request?.Headers != null)
+    {
+        callingUrl = ViewContext.HttpContext.Request.Headers["Referer"].ToString() ?? "";
+        routeParams = callingUrl.Split('/');
+
+        if (routeParams[routeParams.Length - 2] == "ZahtjevMD")
+        {
+            controller = "Zahtjev";
+            action = "ZahtjevMD";
+            id = routeParams[routeParams.Length - 1];
+        }
+    }
+
+}
+
+<a asp-controller="@controller" asp-action="@action" asp-route-id="@id">
+    <i class="bi bi-arrow-left-square-fill" style="font-size: 2rem; color: #0d6efd;"></i>
+</a>
+
+<form asp-action="CreateZadatak" onsubmit="return checkArguments()" method="post" class="d-flex flex-column align-items-center justify-content-center gap-3 my-5">
+    <input type="hidden" name="callingUrl" value="@ViewContext.HttpContext.Request.Headers["Referer"]" />
+    <input type="hidden" name="page" value="@Model.PagingInfo.CurrentPage" />
+    <input type="hidden" name="sort" value="@Model.PagingInfo.Sort" />
+    <input type="hidden" name="ascending" value="@Model.PagingInfo.Ascending.ToString()" />
+
+    <label class="align-self-start fw-bold" for="Naslov">Naslov: </label>
+    <input class="w-100 form-control" name="Naslov" required />
+
+    <label class="align-self-start fw-bold" for="Opis">Opis: </label>
+    <textarea rows="4" class="w-100 form-control" name="Opis" required></textarea>
+
+    <label class="align-self-start fw-bold" for="PlanPoc">Planirani pocetak: </label>
+    <input type="date" class="w-100 form-control" name="PlanPoc" required />
+
+    <label class="align-self-start fw-bold" for="PlanKraj">Planirani kraj: </label>
+    <input type="date" class="w-100 form-control" name="PlanKraj" required />
+
+    <label class="align-self-start fw-bold" for="StvPoc">Stvarni pocetak: </label>
+    <input type="date" class="w-100 form-control" name="StvPoc" />
+
+    <label class="align-self-start fw-bold" for="StvKraj">Stvarni kraj: </label>
+    <input type="date" class="w-100 form-control" name="StvKraj" />
+
+    <label class="align-self-start fw-bold" for="Prioritet">Prioritet: </label>
+    <select name="Prioritet" class="form-select" required>
+        <option value="Not urgent">Not urgent</option>
+        <option value="Medium">Medium</option>
+        <option value="Urgent">Urgent</option>
+    </select>
+
+
+    <label class="align-self-start fw-bold" for="Zahtjev">Zahtjev: </label>
+    <select name="ZahtjevId" class="form-control">
+        @foreach (var zahtjev in Model.Zahtjevi)
+        {
+            <option value="@zahtjev.IdZahtjeva" selected="@(Model.Id.HasValue && Model.Id.Value == zahtjev.IdZahtjeva)">
+                @zahtjev.Naslov
+            </option>
+        }
+    </select>
+
+    <label class="align-self-start fw-bold" for="Status">Status: </label>
+    <select name="Status" class="form-select">
+        @* <option value="null" >Ne pripada zahtjevu</option> *@
+        @foreach (var status in Model.Statusi)
+        {
+            <option value="@status.IdStatusa">@status.ImeStatusa</option>
+        }
+    </select>
+
+    <label class="align-self-start fw-bold" for="Osoba">Osoba: </label>
+    <select name="Osoba" class="form-select">
+        @* <option value="null" >Ne pripada zahtjevu</option> *@
+        @foreach (var osoba in Model.Osobe)
+        {
+            <option value="@osoba.IdOsoba">@osoba.Ime</option>
+        }
+    </select>
+
+    <button type="submit" class="btn btn-primary w-10">Stvori</button>
+
+</form>
+
+
+<script>
+    function checkArguments() {
+        var requiredInputs = document.querySelectorAll("input[required], textarea[required]");
+
+        for (var i = 0; i < requiredInputs.length; i++) {
+            var input = requiredInputs[i];
+
+            // Check if the input has a value
+            if (input.value.trim() === "") {
+                alert(input.getAttribute("name") + " is required!");
+                return false;
+            }
+        }
+
+        return true;
+    }
+</script>
+
+
+@if (TempData.ContainsKey("SuccessMessage"))
+{
+    <div style="position:absolute; bottom: 2rem; right: 2rem;" class="toast bg-success text-light" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Uspjeh</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body text-light">
+            @TempData["SuccessMessage"]
+        </div>
+    </div>
+
+    <script>
+        // Show the toast when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            var toast = new bootstrap.Toast(document.querySelector('.toast'));
+            toast.show();
+        });
+    </script>
+}
+
+@if (TempData.ContainsKey("ErrorMessage"))
+{
+    <div style="position:absolute; bottom: 2rem; right: 2rem;" class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Uspjeh</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            @TempData["ErrorMessage"]
+        </div>
+    </div>
+
+    <script>
+        // Show the toast when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            var toast = new bootstrap.Toast(document.querySelector('.toast'));
+            toast.show();
+        });
+    </script>
+}

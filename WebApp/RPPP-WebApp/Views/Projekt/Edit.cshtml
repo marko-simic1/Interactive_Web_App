@@ -1,0 +1,140 @@
+﻿@*
+@model RPPP_WebApp.Models.Projekt
+
+@{
+    ViewData["Title"] = "Uređivanje projekta";
+}
+
+<h1>Uredi projekt</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-route-id="@Model.IdProjekta"
+              asp-route-page="@ViewBag.Page"
+              asp-route-sort="@ViewBag.Sort"
+              asp-route-ascending="@ViewBag.Ascending"
+              asp-action="Edit">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="IdProjekta" />
+
+            <div class="form-group">
+                <label asp-for="ImeProjekta" class="control-label"></label>
+                <input asp-for="ImeProjekta" class="form-control" />
+                <span asp-validation-for="ImeProjekta" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Kratica" class="control-label"></label>
+                <input asp-for="Kratica" class="form-control" />
+                <span asp-validation-for="Kratica" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Sazetak" class="control-label"></label>
+                <input asp-for="Sazetak" class="form-control" />
+                <span asp-validation-for="Sazetak" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DatumPoc" class="control-label"></label>
+                <input asp-for="DatumPoc" class="form-control" />
+                <span asp-validation-for="DatumPoc" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DatumZav" class="control-label"></label>
+                <input asp-for="DatumZav" class="form-control" />
+                <span asp-validation-for="DatumZav" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="BrKartice" class="control-label"></label>
+                <input asp-for="BrKartice" class="form-control" />
+                <span asp-validation-for="BrKartice" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="IdVrste" class="control-label">Vrsta projekta</label>
+                <select asp-for="IdVrste" class="form-control" asp-items="ViewBag.VrsteProjekata">
+                    <option disabled selected value="">Odaberite vrstu projekta</option>
+                </select>
+                <div class="form-text"><span asp-validation-for="IdVrste" class="text-danger"></span></div>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Spremi</button>
+                <button asp-action="Index"
+                        asp-route-page="@ViewBag.Page"
+                        asp-route-sort="@ViewBag.Sort"
+                        asp-route-ascending="@ViewBag.Ascending" class="btn btn-secondary" type="submit">
+                    Odustani
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+*@
+
+@model RPPP_WebApp.Models.Projekt
+
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-start">
+        <input asp-for="ImeProjekta" class="form-control" placeholder="Ime projekta" />
+    </td>
+    <td>
+        <input asp-for="Kratica" class="form-control" />
+    </td>
+    <td>
+        <input asp-for="Sazetak" class="form-control" />
+    </td>
+    <td>
+        <input asp-for="DatumPoc" class="form-control" />
+    </td>
+    <td>
+        <input asp-for="DatumZav" class="form-control" />
+    </td>
+    <td>
+        <input asp-for="BrKartice" class="form-control" />
+    </td>
+    <td class="text-start">
+        <select asp-for="IdVrste" class="form-control" asp-items="ViewBag.VrsteProjekata">
+            <option disabled selected value="">Odaberite vrstu projekta</option>
+        </select>
+    </td>
+
+    <td>
+        <input type="hidden" asp-for="IdProjekta" />
+        <button class="btn btn-sm cancel" hx-include="closest tr"
+                hx-post="@Url.Action(nameof(ProjektController.Edit), new { id = Model.IdProjekta })"
+                title="Spremi">
+            Spremi
+        </button>
+    </td>
+    <td>
+        <button class="btn btn-sm cancel"
+                hx-get="@Url.Action(nameof(ProjektController.Get), new { id = Model.IdProjekta })"
+                title="Odustani">
+
+            Odustani
+        </button>
+    </td>
+    <td>
+        <div asp-validation-summary="All"></div>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

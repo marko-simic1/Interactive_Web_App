@@ -1,0 +1,82 @@
+﻿@*
+@model RPPP_WebApp.Models.VrstaProjekta
+
+@{
+    ViewData["Title"] = "Uređivanje vrste projekta";
+}
+
+<h1>Uredi vrstu projekta</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-route-id="@Model.IdVrste"
+              asp-route-page="@ViewBag.Page"
+              asp-route-sort="@ViewBag.Sort"
+              asp-route-ascending="@ViewBag.Ascending"
+              asp-action="Edit">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="IdVrste" />
+
+            <div class="form-group">
+                <label asp-for="ImeVrste" class="control-label"></label>
+                <input asp-for="ImeVrste" class="form-control" />
+                <span asp-validation-for="ImeVrste" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Spremi</button>
+                <button asp-action="Index"
+                        asp-route-page="@ViewBag.Page"
+                        asp-route-sort="@ViewBag.Sort"
+                        asp-route-ascending="@ViewBag.Ascending" class="btn btn-secondary" type="submit">
+                    Odustani
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+                        *@
+
+@model RPPP_WebApp.Models.VrstaProjekta
+
+<tr hx-target="this" hx-swap="outerHTML">
+    <td class="text-start">
+        <input asp-for="ImeVrste" class="form-control" />
+    </td>
+    <td>
+        <input type="hidden" asp-for="IdVrste" />
+        <button class="btn btn-sm cancel" hx-include="closest tr"
+                hx-post="@Url.Action(nameof(VrstaProjektaController.Edit), new { id = Model.IdVrste })"
+                title="Spremi">
+            Spremi
+        </button>
+    </td>
+    <td>
+        <button class="btn btn-sm cancel"
+                hx-get="@Url.Action(nameof(VrstaProjektaController.Get), new { id = Model.IdVrste })"
+                title="Odustani">
+
+            Odustani
+        </button>
+    </td>
+    <td>
+        <div asp-validation-summary="All"></div>
+    </td>
+</tr>
+
+@section scripts {
+    <script src="~/js/pager.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+
+    <partial name="IncludeValidation" />
+}

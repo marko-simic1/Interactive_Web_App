@@ -1,0 +1,64 @@
+﻿@model RPPP_WebApp.ViewModels.ZahtjevViewModel
+
+@{
+    ViewData["Title"] = "Update Zahtjev";
+}
+
+<h2 class="text-center mt-4">@ViewData["Title"]</h2>
+
+<a asp-controller="Zahtjev" asp-action="Zahtjevi" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-sort="@Model.PagingInfo.Sort" asp-route-ascending="@Model.PagingInfo.Ascending">
+    <i class="bi bi-arrow-left-square-fill" style="font-size: 2rem; color: #0d6efd;"></i>
+</a>
+
+<form asp-action="UpdateZahtjev" onsubmit="return checkArguments()" method="post" class="d-flex flex-column align-items-center justify-content-center gap-3 my-5">
+
+    <input type="hidden" name="page" value="@Model.PagingInfo.CurrentPage"/>
+    <input type="hidden" name="sort" value="@Model.PagingInfo.Sort" />
+    <input type="hidden" name="ascending" value="@Model.PagingInfo.Ascending.ToString()" />
+
+    <input type="hidden" name="IdZahtjeva" value="@Model.Zahtjev.IdZahtjeva" />
+
+    <label class="align-self-start fw-bold" for="Naslov">Naslov: </label>
+    <input class="w-100" name="Naslov" value="@Model.Zahtjev.Naslov" />
+
+    <label class="align-self-start fw-bold" for="Opis">Opis: </label>
+    <textarea rows="4" class="w-100" name="Opis">@Model.Zahtjev.Opis</textarea>
+
+    <label class="align-self-start fw-bold" for="Projekt">Projekt: </label>
+    <select name="Projekt" class="form-select" aria-label="Default select example">
+        <option value="null" >Ne pripada projektu</option>
+        @foreach (var projekt in Model.Projekti)
+        {
+            var isSelected = Model.Zahtjev.IdProjektaNavigation != null && Model.Zahtjev.IdProjektaNavigation.IdProjekta == projekt.IdProjekta;
+            <option value="@projekt.IdProjekta" selected="@isSelected">@projekt.ImeProjekta</option>
+        }
+    </select>
+
+    <label class="align-self-start fw-bold" for="Vrsta">Vrsta zahtjeva: </label>
+    <select name="Vrsta" class="form-select" aria-label="Default select example">
+        <option value="null">Nema vrste</option>
+        @foreach (var vrstaZah in Model.VrstaZahtjeva)
+        {
+            var isSelected = Model.Zahtjev.IdVrsteNavigation != null && Model.Zahtjev.IdVrsteNavigation.IdVrste == vrstaZah.IdVrste;
+            <option value="@vrstaZah.IdVrste" selected="@isSelected">@vrstaZah.ImeZahtjeva</option>
+        }
+    </select>
+
+    <button type="submit" class="btn btn-primary w-10">Update</button>
+
+</form>
+
+
+<script>
+    function checkArguments() {
+        var naslovInput = document.querySelector("input[name='Naslov']");
+
+        if (naslovInput.value.trim() === "") {
+            alert("Naslov zahtjeva je obavezan!");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+

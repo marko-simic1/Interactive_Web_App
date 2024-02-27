@@ -1,0 +1,17 @@
+﻿.left {
+    float: left;
+    width: 50%;
+    padding: 0 1rem;
+}
+
+.right {
+    float: right;
+    width: 50%;
+    padding: 0 1rem;
+}
+
+.bold-line {
+    border-top: 2px solid black; /* You can adjust the thickness and color */
+    margin-top: 10px; /* Adjust the margin as needed */
+    clear: both;
+}

@@ -1,0 +1,29 @@
+﻿@model RPPP_WebApp.ViewModels.VrstaTransakcijeViewModel
+
+@{
+    ViewData["Title"] = "Uredi vrstu";
+}
+
+<h2 class="text-center mt-4">@ViewData["Title"]</h2>
+
+<a asp-controller="Transakcija" asp-action="VrsteTransakcija" asp-route-page="@Model.PagingInfo.CurrentPage" asp-route-sort="@Model.PagingInfo.Sort" asp-route-ascending="@Model.PagingInfo.Ascending">
+    <i class="bi bi-arrow-left-square-fill" style="font-size: 2rem; color: #0d6efd;"></i>
+</a>
+
+<form asp-action="UpdateVrstaTransakcije" method="post" class="d-flex flex-column gap-3">
+
+    <input type="hidden" name="page" value="@Model.PagingInfo.CurrentPage" />
+    <input type="hidden" name="sort" value="@Model.PagingInfo.Sort" />
+    <input type="hidden" name="ascending" value="@Model.PagingInfo.Ascending.ToString()" />
+    <input type="hidden" name="id" value="@Model.Vrsta.IdVrste" />
+
+    <span>
+        <label class="fw-bold text-start" for="imeVrste">Ime vrste: </label>
+        <input type="text" class="form-control" name="imeVrste" placeholder="Ime vrste" value="@Model.Vrsta.ImeVrste">
+    </span>
+
+    <div class="col-12 d-flex justify-content-center">
+        <button style="width:200px" type="submit" class="btn btn-primary w-10">Ažuriraj</button>
+    </div>
+
+</form>
